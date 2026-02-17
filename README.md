@@ -38,10 +38,10 @@ Assessment will be divided into a total of 200 points:
 | Component               | Points |
 |-------------------------|--------|
 | Homework                 | 100           |    
-| Book chapter |100       |           3 × 15               |
+| Book chapter |100       |                        |
 | **TOTAL**               | **200**|                     
 
-There are are 12 homework à 10 points. The total points for the homework is capped at a 100.
+There are are 12 homework à 12 points. The total points for the homework is capped at a 100.
 
 Instructions and guidelines for the book chapter will be released separately shortly.
 
