@@ -2,6 +2,12 @@
 
 ([on github](https://github.com/LEAP-at-Chapman/CPSC-570-From-Bugs-to-Proofs))
 
+## General Information
+- Class: CPSC 406 Algorithm Analysis 
+- Instructor: [Jonathan Weinberger](https://sites.google.com/view/jonathanweinberger), [jweinberger@chapman.edu](mailto:jweinberger@chapman.edu)
+- Lectures: MW 5:30 PM -- 6:45 PM  KC 156
+- Office Hours: Tu 2:20 PM -- 3:50 Swenson N305, Th 2:20 PM -- 3:50 Swenson N205
+
 This is the repository for the course CPSC-570 From Bugs to Proof in Spring 2026.
 
 At the end of the course, we will have written a draft of an introductory book on the use of software tools and formal reasoning to develop programs that are correct by construction.
