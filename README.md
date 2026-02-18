@@ -49,7 +49,7 @@ Assessment will be divided into a total of 200 points:
 
 There are are 12 homework à 12 points. The total points for the homework is capped at a 100.
 
-You can also substitute up to two homework assignments by a presentation (approx. 15 mins) on an interesting case study (especially from industry or academic research) that involves tools or theories that we are discussing, or related ones. For scheduling purposes, please let me know a week in advance (or earlier) if you are planning to give a presentation.
+You can also substitute up to two homework assignments by a presentation (approx. 15 mins) on an interesting case study (especially from industry or academic research) that involves tools or theories that we are discussing, or related ones. For scheduling purposes, please let me know a week in advance (or earlier) if you are planning to give a presentation. I am happy to help with planning and walking you through while preparing the presentation.
 
 Instructions and guidelines for the book chapter will be released separately shortly.
 
