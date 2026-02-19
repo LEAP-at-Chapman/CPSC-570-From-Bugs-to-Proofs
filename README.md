@@ -23,6 +23,7 @@ Possible languages used in this course are, for example, Python, Haskell, Lean, 
 - [Lecture by Lecture](lecture-by-lecture.md)
 - [Canvas](https://canvas.chapman.edu/courses/83641)
 - [How to create a jupyter book](docs/jupyter-books/how-to-create-a-jupyter-book.md)
+- [Book chapter list](book-chapters.md)
 
 **Resources on Discrete Mathematics**:
 - Dr Moshier's book (see Canvas)
