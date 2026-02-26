@@ -8,4 +8,4 @@
 * L4.1: [Alloy](https://alloytools.org/): [tutorial](https://haslab.github.io/formal-software-design/overview/index.html), [docs](https://alloy.readthedocs.io/), [Alloy4Fun](http://alloy4fun.inesctec.pt/), [relational logic](https://haslab.github.io/formal-software-design/relational-logic/index.html)
 * L4.2: More Alloy
   * Demos: [Trash](alloy/trash.als), [File structure](alloy/struct.als)
-  * [Exercies](https://haslab.github.io/formal-software-design/structural-design/index.html#exercises) 
+  * [Exercies](https://haslab.github.io/formal-software-design/structural-design/index.html#exercises) (containing HW 2)
