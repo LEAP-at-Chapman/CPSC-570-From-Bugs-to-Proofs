@@ -1,5 +1,7 @@
 # Lecture by lecture
 
+
+
 * L1.1: Introduction
 * L1.2: [TLA+](https://lamport.azurewebsites.net/tla/tla.html)
 * L2.1: [TLA+ toolbox](https://lamport.org/tla/toolbox.html) and examples ([clock](tla/DAsyncInterface.tla), [interface](tla/DClock.tla))
@@ -9,3 +11,5 @@
 * L4.2: More Alloy
   * Demos: [Trash](alloy/trash.als), [File structure](alloy/struct.als)
   * [Exercises](https://haslab.github.io/formal-software-design/structural-design/index.html#exercises) (containing HW 2)
+* L5.2: Introduction to model checking
+  * Linear time logic (LTL) I
