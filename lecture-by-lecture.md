@@ -12,4 +12,4 @@
   * Demos: [Trash](alloy/trash.als), [File structure](alloy/struct.als)
   * [Exercises](https://haslab.github.io/formal-software-design/structural-design/index.html#exercises) (containing HW 2)
 * L5.2: Introduction to model checking
-  * [Linear time logic (LTL) I](CPSC-570%20Notes.pdf)
+  * Linear temporal logic (LTL) I: [Wikipedia](https://en.wikipedia.org/wiki/Linear_temporal_logic), [Lecture notes](CPSC-570%20Notes.pdf)
