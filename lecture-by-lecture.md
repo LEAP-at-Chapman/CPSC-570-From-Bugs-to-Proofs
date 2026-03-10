@@ -14,7 +14,7 @@
 * L5.2: Model checking I
   * Linear temporal logic (LTL) I: [Wikipedia](https://en.wikipedia.org/wiki/Linear_temporal_logic), [Lecture notes](CPSC-570%20Notes.pdf)
 * L6.1: Model checking II
-  * [LTL](https://hackmd.io/4Mhc2FywRF2mYqDprcJMAA?view), [Transition systems](https://hackmd.io/ZHM1i5WiSTyq1QHuv8UkKQ?both)
+  * [LTL](https://hackmd.io/4Mhc2FywRF2mYqDprcJMAA?view), [Transition systems](https://hackmd.io/ZHM1i5WiSTyq1QHuv8UkKQ)
   * [nuXmv](https://nuxmv.fbk.eu/)
   * Demo: mutex ([model](nuxmv/mutex_v1_model.smv), [LTL](nuxmv/mutex_v2_ltl.smv))
   * HW 3: railroad crossing [readme](nuxmv/README.md)
