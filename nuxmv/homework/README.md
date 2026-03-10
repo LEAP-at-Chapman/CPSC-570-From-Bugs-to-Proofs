@@ -74,7 +74,7 @@ The model from Part 1 is included (with the same TODOs — complete Part 1 first
 |----------|---------|---------|
 | `G p` | $\square p$ | p holds globally |
 | `F p` | $\lozenge p$ | p holds eventually |
-| `X p` | $\bigcircle p$ | p holds in the next state |
+| `X p` | $\bigcirc p$ | p holds in the next state |
 | `p U q` | $p \mathbf{U} q$ | p holds until q becomes true |
 
 **What to observe:** Do all your properties pass? If not, inspect the counterexample.
