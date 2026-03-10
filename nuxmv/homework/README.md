@@ -11,8 +11,8 @@ You will build the verification incrementally across three parts:
 | Part | Topic | You will learn | File |
 |------|-------|----------------|------|
 | 1 | **Modeling** | nuXmv state machines, transitions | [RailroadCrossing_Part1.smv](RailroadCrossing_Part1.smv) |
-| 2 | **CTL** | Branching-time properties, SPEC keyword | [RailroadCrossing_Part2.smv](RailroadCrossing_Part2.smv) |
-| 3 | **LTL + Fairness** | Linear-time properties, FAIRNESS | [RailroadCrossing_Part3.smv](RailroadCrossing_Part3.smv) |
+| 2 | **LTL** | Linear-time properties, LTLSPEC keyword | [RailroadCrossing_Part2.smv](RailroadCrossing_Part2.smv) |
+| 3 | **CTL + Fairness** | Branching-time properties, FAIRNESS | [RailroadCrossing_Part3.smv](RailroadCrossing_Part3.smv) |
 
 Each part builds on the previous one. Complete them in order.
 
@@ -60,13 +60,38 @@ The template provides:
 
 ---
 
-## Part 2: CTL — [RailroadCrossing_Part2.smv](RailroadCrossing_Part2.smv)
+## Part 2: LTL — [RailroadCrossing_Part2.smv](RailroadCrossing_Part2.smv)
 
-**Goal:** Write CTL specifications that capture safety and reachability properties.
+**Goal:** Write LTL specifications that capture safety and response properties.
 
-The complete model from Part 1 is provided. Your task is to translate English properties into CTL formulas using the `SPEC` keyword.
+The model from Part 1 is included (with the same TODOs — complete Part 1 first). Your task is to translate English properties into LTL formulas using the `LTLSPEC` keyword.
 
-**Your task:** Write CTL formulas for five properties (described in the file).
+**Your task:** Write LTL formulas for three properties (described in the file).
+
+**LTL quick reference:**
+
+| Operator | Meaning |
+|----------|---------|
+| `G p` | p holds globally |
+| `F p` | p holds eventually |
+| `X p` | p holds in the next state |
+| `p U q` | p holds until q becomes true |
+
+**What to observe:** Do all your properties pass? If not, inspect the counterexample.
+
+---
+
+## Part 3: CTL + Fairness — [RailroadCrossing_Part3.smv](RailroadCrossing_Part3.smv)
+
+**Goal:** Write CTL specifications and add fairness constraints to ensure liveness.
+
+The model from Parts 1–2 is included (with the same TODOs — complete Part 1 first). Your LTL specs from Part 2 are referenced for comparison. Your task is to add CTL specifications and a FAIRNESS constraint.
+
+**Your task:**
+1. Write CTL formulas for five properties (described in the file)
+2. Run **without** the FAIRNESS constraint — note which properties fail
+3. Add the FAIRNESS constraint, re-run — note which now pass
+4. Explain: why does fairness matter for this model?
 
 **CTL quick reference:**
 
@@ -79,32 +104,7 @@ The complete model from Part 1 is provided. Your task is to translate English pr
 | `AX p` | In all next states, p holds |
 | `A[p U q]` | On all paths, p holds until q |
 
-**What to observe:** Do all your properties pass? For the bonus property, explain the counterexample if it fails.
-
----
-
-## Part 3: LTL + Fairness — [RailroadCrossing_Part3.smv](RailroadCrossing_Part3.smv)
-
-**Goal:** Write LTL specifications and add fairness constraints to ensure liveness.
-
-The complete model and CTL specs from Part 2 are provided. Your task is to add LTL specifications and a FAIRNESS constraint.
-
-**Your task:**
-1. Write LTL formulas for five properties (described in the file)
-2. Run **without** the FAIRNESS constraint — note which properties fail
-3. Add the FAIRNESS constraint, re-run — note which now pass
-4. Explain: why does fairness matter for this model?
-
-**LTL quick reference:**
-
-| Operator | Meaning |
-|----------|---------|
-| `G p` | p holds globally |
-| `F p` | p holds eventually |
-| `X p` | p holds in the next state |
-| `p U q` | p holds until q becomes true |
-
-**What to observe:** Which LTL properties fail without fairness? What counterexample does nuXmv produce? How does `FAIRNESS` fix this?
+**What to observe:** Which CTL properties fail without fairness? What counterexample does nuXmv produce? How does `FAIRNESS` fix this? Compare with your LTL specs from Part 2 — which CTL formulas correspond to which LTL formulas?
 
 ---
 
@@ -136,13 +136,13 @@ Interactive mode lets you check CTL and LTL separately and inspect results incre
 ## Deliverables
 
 1. **Part 1:** Completed `RailroadCrossing_Part1.smv` with gate transitions and defines
-2. **Part 2:** Completed `RailroadCrossing_Part2.smv` with CTL specifications
-3. **Part 3:** Completed `RailroadCrossing_Part3.smv` with LTL specifications and fairness
+2. **Part 2:** Completed `RailroadCrossing_Part2.smv` with LTL specifications
+3. **Part 3:** Completed `RailroadCrossing_Part3.smv` with CTL specifications and fairness
 4. **Short writeup** (1/2–1 page): For each part, describe what you observed when running nuXmv. In particular:
    - Does the safety property hold? If not during development, what was the counterexample?
-   - Which CTL properties pass and why?
-   - Which LTL properties fail without fairness? What changes with fairness?
-   - Compare one CTL property with its LTL equivalent — are they checking the same thing?
+   - Which LTL properties pass and why?
+   - Which CTL properties fail without fairness? What changes with fairness?
+   - Compare one LTL property with its CTL equivalent — are they checking the same thing?
 
 ---
 
@@ -151,5 +151,5 @@ Interactive mode lets you check CTL and LTL separately and inspect results incre
 - Read counterexample traces carefully — they show the exact sequence of states that violates a property
 - Start by tracing the model on paper: write out 6–8 states of the train/gate lifecycle to build intuition
 - If a property fails unexpectedly, check whether the issue is a modeling bug or a missing fairness constraint
-- Compare with the lecture mutex example: `AG mutex` ↔ `AG safe`, fairness on `turn` ↔ fairness on the train
+- Compare with the lecture mutex example: `G mutex` ↔ `G safe`, `AG mutex` ↔ `AG safe`, fairness on `turn` ↔ fairness on the train
 - The nuXmv documentation is at [https://nuxmv.fbk.eu/](https://nuxmv.fbk.eu/)
