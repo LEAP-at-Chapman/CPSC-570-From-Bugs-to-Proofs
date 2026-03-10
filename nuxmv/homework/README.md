@@ -70,12 +70,12 @@ The model from Part 1 is included (with the same TODOs — complete Part 1 first
 
 **LTL quick reference:**
 
-| Operator | Meaning |
-|----------|---------|
-| `G p` | p holds globally |
-| `F p` | p holds eventually |
-| `X p` | p holds in the next state |
-| `p U q` | p holds until q becomes true |
+| Operator (nuXmv notation) | Operator (LTL notation) | Meaning |
+|----------|---------|---------|
+| `G p` | $\square p$ | p holds globally |
+| `F p` | $\lozene p$ | p holds eventually |
+| `X p` | $\bigcircle p$ | p holds in the next state |
+| `p U q` | $p \mathbf{U} q$ | p holds until q becomes true |
 
 **What to observe:** Do all your properties pass? If not, inspect the counterexample.
 
