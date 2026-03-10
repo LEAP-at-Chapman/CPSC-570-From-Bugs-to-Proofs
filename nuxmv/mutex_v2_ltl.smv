@@ -1,0 +1,68 @@
+-- Mutual Exclusion — Block 2: LTL Model Checking
+-- CPSC 570 Lecture Demo
+--
+-- We add LTL specifications to the mutex model from Block 1.
+--
+-- LTL = Linear Temporal Logic (linear time)
+--   No path quantifiers — LTL reasons about a single infinite trace.
+--   The model checker verifies the formula holds on ALL traces.
+--
+--   Operators:
+--     G p     — p holds Globally (in every state of the trace)
+--     F p     — p holds in some Future state (eventually)
+--     X p     — p holds in the neXt state
+--     p U q   — p holds Until q becomes true (q must eventually hold)
+--
+-- The LTLSPEC keyword introduces an LTL formula to check.
+
+MODULE main
+
+VAR
+  turn : {1, 2};
+  p1   : {idle, trying, critical};
+  p2   : {idle, trying, critical};
+
+ASSIGN
+  init(turn) := {1, 2};
+  next(turn) := {1, 2};
+
+  init(p1) := idle;
+  next(p1) := case
+    turn != 1                    : p1;
+    p1 = idle                    : {idle, trying};
+    p1 = trying & p2 != critical : critical;
+    p1 = critical                : idle;
+    TRUE                         : p1;
+  esac;
+
+  init(p2) := idle;
+  next(p2) := case
+    turn != 2                    : p2;
+    p2 = idle                    : {idle, trying};
+    p2 = trying & p1 != critical : critical;
+    p2 = critical                : idle;
+    TRUE                         : p2;
+  esac;
+
+DEFINE
+  mutex := !(p1 = critical & p2 = critical);
+
+-- =====================================================
+-- LTL SPECIFICATIONS
+-- =====================================================
+
+-- SAFETY: mutual exclusion holds in every state of every trace.
+-- "Globally, mutex is true."
+LTLSPEC G mutex
+
+-- LIVENESS (attempt): if p1 is trying, must it eventually get in?
+-- "Globally, trying implies eventually critical."
+--
+-- >>> Run this and inspect the counterexample! <<<
+-- The scheduler can always pick turn=2, starving p1 forever.
+-- This motivates FAIRNESS in Block 3.
+LTLSPEC G (p1 = trying -> F (p1 = critical))
+
+-- Run:  nuXmv mutex_v2_ltl.smv
+-- Expected: safety PASSES, liveness FAILS.
+-- Read the counterexample trace — it shows the scheduler starving p1.

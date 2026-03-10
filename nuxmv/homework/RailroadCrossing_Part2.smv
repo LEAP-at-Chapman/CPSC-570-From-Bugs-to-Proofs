@@ -1,0 +1,78 @@
+-- Railroad Crossing Controller — Part 2: LTL Verification
+--
+-- HOMEWORK: Write LTL specifications to verify the crossing controller.
+--
+-- The model from Part 1 is below (with the TODOs you need to complete first).
+-- Your task is to translate English properties into LTL formulas.
+--
+-- LTL QUICK REFERENCE:
+--   G p     — p holds Globally (in every state of the trace)
+--   F p     — p holds in some Future state (eventually)
+--   X p     — p holds in the neXt state
+--   p U q   — p holds Until q becomes true (q must eventually hold)
+--
+-- YOUR TASK:
+-- Write an LTLSPEC for each of the following properties:
+--
+-- 1. SAFETY: "The gate is always down when a train is crossing."
+--    (Hint: use G)
+--
+-- 2. RESPONSE: "Whenever the train is approaching, the gate will
+--    eventually be down."
+--    (Hint: G with implication and F)
+--
+-- 3. GATE PROGRESS: "If the gate starts lowering, it will always
+--    be fully down in the very next state."
+--    (Hint: G with implication and X)
+
+MODULE main
+
+VAR
+  train : {absent, approaching, near, crossing, leaving};
+  gate  : {up, lowering, down, raising};
+
+ASSIGN
+  init(train) := absent;
+  next(train) := case
+    train = absent      : {absent, approaching};
+    train = approaching : near;
+    train = near        : crossing;
+    train = crossing    : leaving;
+    train = leaving     : absent;
+  esac;
+
+  -- Gate: starts in the up position (given)
+  init(gate) := up;
+
+  -- TODO: Complete the gate transitions (see Part 1).
+  -- Replace the FALSEs with the correct guards.
+  next(gate) := case
+    FALSE : lowering;   -- When should the gate start lowering?
+    FALSE : down;       -- When is lowering complete?
+    FALSE : raising;    -- When should the gate start raising?
+    FALSE : up;         -- When is raising complete?
+    TRUE  : gate;       -- Default: stay in current position
+  esac;
+
+DEFINE
+  -- TODO: Replace TRUE with the correct definitions (see Part 1).
+
+  -- safe: if the train is crossing, the gate must be down
+  safe := TRUE;
+
+  -- train_present: the train is somewhere other than absent
+  train_present := TRUE;
+
+-- =====================================================
+-- TODO: Write LTL specifications below.
+-- Use the LTLSPEC keyword followed by an LTL formula.
+-- =====================================================
+
+-- 1. Safety
+-- LTLSPEC ...
+
+-- 2. Response
+-- LTLSPEC ...
+
+-- 3. Gate progress
+-- LTLSPEC ...

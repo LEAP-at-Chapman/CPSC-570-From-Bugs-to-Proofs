@@ -1,0 +1,129 @@
+-- Railroad Crossing Controller — Part 3: CTL and Fairness
+--
+-- HOMEWORK: Write CTL specifications and explore fairness constraints.
+--
+-- The model from Parts 1–2 is below (with the TODOs you need to complete first).
+--
+-- CTL QUICK REFERENCE:
+--   AG p      — on all paths, p holds in every state (safety)
+--   AF p      — on all paths, p holds eventually (liveness)
+--   EF p      — on some path, p holds eventually (reachability)
+--   EG p      — on some path, p holds in every state (possibility)
+--   AX p      — in all successor states, p holds
+--   EX p      — in some successor state, p holds
+--   A[p U q]  — on all paths, p holds until q (strong until)
+--   E[p U q]  — on some path, p holds until q
+--
+-- FAIRNESS:
+--   FAIRNESS p  — only consider traces where p holds infinitely often.
+--   Without fairness, nuXmv considers ALL traces, including ones where
+--   the train stays absent forever. These "degenerate" traces can cause
+--   liveness properties to fail vacuously.
+--
+-- YOUR TASK:
+-- 1. Write SPEC formulas for CTL properties 1–5 below.
+-- 2. Run WITHOUT the FAIRNESS constraint. Note which properties fail.
+-- 3. Uncomment the FAIRNESS constraint and re-run. Note the change.
+-- 4. In your writeup, explain: why does fairness matter here?
+--    (Compare with the lecture demo where FAIRNESS turn = 1 fixed starvation.)
+--
+-- CTL PROPERTIES TO VERIFY:
+--
+-- 1. SAFETY: "The gate is always down when a train is crossing."
+--    (Hint: this is exactly AG safe)
+--
+-- 2. REACHABILITY: "It is possible for a train to be crossing
+--    while the gate is down."
+--    (Hint: use EF with a conjunction)
+--
+-- 3. RECOVERY: "From any reachable state, the gate can eventually
+--    return to the up position."
+--    (Hint: combine AG with EF)
+--
+-- 4. RESPONSE: "Whenever the train is approaching, the gate will
+--    eventually be down (on all paths from that state)."
+--    (Hint: AG with implication and AF)
+--
+-- 5. GATE PROGRESS: "If the gate starts lowering, it will always
+--    be fully down in the very next state."
+--    (Hint: AG with implication and AX)
+--
+-- BONUS: Does this hold?
+--    "A train always eventually crosses."  (AG AF train = crossing)
+--    >>> This should FAIL without fairness. Why? <<<
+
+MODULE main
+
+VAR
+  train : {absent, approaching, near, crossing, leaving};
+  gate  : {up, lowering, down, raising};
+
+ASSIGN
+  init(train) := absent;
+  next(train) := case
+    train = absent      : {absent, approaching};
+    train = approaching : near;
+    train = near        : crossing;
+    train = crossing    : leaving;
+    train = leaving     : absent;
+  esac;
+
+  -- Gate: starts in the up position (given)
+  init(gate) := up;
+
+  -- TODO: Complete the gate transitions (see Part 1).
+  -- Replace the FALSEs with the correct guards.
+  next(gate) := case
+    FALSE : lowering;   -- When should the gate start lowering?
+    FALSE : down;       -- When is lowering complete?
+    FALSE : raising;    -- When should the gate start raising?
+    FALSE : up;         -- When is raising complete?
+    TRUE  : gate;       -- Default: stay in current position
+  esac;
+
+DEFINE
+  -- TODO: Replace TRUE with the correct definitions (see Part 1).
+
+  -- safe: if the train is crossing, the gate must be down
+  safe := TRUE;
+
+  -- train_present: the train is somewhere other than absent
+  train_present := TRUE;
+
+-- =====================================================
+-- TODO: Uncomment this FAIRNESS constraint AFTER your
+-- first run. It requires the train to approach infinitely
+-- often, ruling out traces where nothing ever happens.
+-- =====================================================
+
+-- FAIRNESS (train = approaching)
+
+-- =====================================================
+-- LTL specs from Part 2 (provided for reference)
+-- =====================================================
+-- LTLSPEC ...  (your safety spec from Part 2)
+-- LTLSPEC ...  (your response spec from Part 2)
+-- LTLSPEC ...  (your gate progress spec from Part 2)
+
+-- =====================================================
+-- TODO: Write CTL specifications below.
+-- Use the SPEC keyword followed by a CTL formula.
+-- =====================================================
+
+-- 1. Safety
+-- SPEC ...
+
+-- 2. Reachability
+-- SPEC ...
+
+-- 3. Recovery
+-- SPEC ...
+
+-- 4. Response
+-- SPEC ...
+
+-- 5. Gate progress
+-- SPEC ...
+
+-- BONUS: Does this hold? Uncomment and run.
+-- SPEC AG (AF (train = crossing))

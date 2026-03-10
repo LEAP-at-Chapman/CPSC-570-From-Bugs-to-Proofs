@@ -1,0 +1,61 @@
+-- Mutual Exclusion — Block 1: nuXmv Modeling Language
+-- CPSC 570 Lecture Demo
+--
+-- Two processes compete for exclusive access to a critical section.
+-- A nondeterministic scheduler decides which process moves each step.
+--
+-- Key concepts introduced:
+--   MODULE       — every nuXmv model starts with MODULE main
+--   VAR          — state variables with finite enumeration types
+--   ASSIGN       — init(v) sets the initial value; next(v) defines transitions
+--   case .. esac — conditional transitions (first matching guard wins)
+--   {a, b}       — nondeterministic choice (the model includes BOTH possibilities)
+--   DEFINE       — named abbreviations (like LET or macros; no new state)
+--
+-- Compare with TLA+:
+--   MODULE main          ↔  ---- MODULE Mutex ----
+--   VAR p1 : {idle,...}  ↔  VARIABLE p1    (but nuXmv types are finite enums)
+--   init(p1) := idle     ↔  Init == p1 = "idle"
+--   next(p1) := case..   ↔  Next == p1' = ...
+--   {idle, trying}       ↔  p1' \in {"idle", "trying"}
+--   DEFINE mutex := ...  ↔  mutex == ...
+
+MODULE main
+
+VAR
+  turn : {1, 2};                        -- scheduler: which process moves
+  p1   : {idle, trying, critical};      -- process 1 state
+  p2   : {idle, trying, critical};      -- process 2 state
+
+ASSIGN
+  -- Scheduler: nondeterministic each step (models interleaving)
+  init(turn) := {1, 2};
+  next(turn) := {1, 2};
+
+  -- Process 1 transitions
+  init(p1) := idle;
+  next(p1) := case
+    turn != 1                    : p1;            -- not my turn: stutter
+    p1 = idle                    : {idle, trying}; -- may request access
+    p1 = trying & p2 != critical : critical;       -- enter if other not in CS
+    p1 = critical                : idle;           -- release
+    TRUE                         : p1;             -- fallback: no change
+  esac;
+
+  -- Process 2 transitions (symmetric)
+  init(p2) := idle;
+  next(p2) := case
+    turn != 2                    : p2;
+    p2 = idle                    : {idle, trying};
+    p2 = trying & p1 != critical : critical;
+    p2 = critical                : idle;
+    TRUE                         : p2;
+  esac;
+
+-- Named property: mutual exclusion
+DEFINE
+  mutex := !(p1 = critical & p2 = critical);
+
+-- Run:  nuXmv mutex_v1_model.smv
+-- nuXmv parses the model and builds the state space.
+-- No properties to check yet — we add those in Blocks 2 and 3.

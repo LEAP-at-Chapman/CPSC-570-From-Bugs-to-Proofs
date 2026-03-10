@@ -1,0 +1,122 @@
+-- Mutual Exclusion — Block 3: CTL, Fairness, and More LTL
+-- CPSC 570 Lecture Demo
+--
+-- We add CTL specifications and fairness constraints to the mutex model.
+--
+-- CTL = Computation Tree Logic (branching time)
+--   Every formula combines a PATH QUANTIFIER with a TEMPORAL OPERATOR:
+--
+--   Path quantifiers:         Temporal operators:
+--     A = "on All paths"        G = "Globally" (always)
+--     E = "there Exists a path" F = "in the Future" (eventually)
+--                                X = "neXt state"
+--                                U = "Until"
+--
+--   Examples:
+--     AG p   — on all paths, p holds in every state
+--     EF p   — there exists a path where p eventually holds
+--     AF p   — on all paths, p eventually holds
+--     EG p   — there exists a path where p always holds
+--     A[p U q] — on all paths, p holds until q becomes true
+--
+--   CTL vs LTL:
+--     CTL AG p  ≈  LTL G p   (but NOT always equivalent!)
+--     CTL AF p  ≈  LTL F p
+--     CTL has EF, EG (existential) — LTL cannot express these.
+--     LTL has "pure" Until — CTL requires a path quantifier: A[p U q].
+--
+-- FAIRNESS constrains which traces the model checker considers.
+--   FAIRNESS p  means: only consider traces where p holds infinitely often.
+--   This rules out unrealistic behaviors (e.g., a scheduler that starves).
+--
+-- The SPEC keyword introduces a CTL formula to check.
+-- The LTLSPEC keyword introduces an LTL formula to check.
+
+MODULE main
+
+VAR
+  turn : {1, 2};
+  p1   : {idle, trying, critical};
+  p2   : {idle, trying, critical};
+
+ASSIGN
+  init(turn) := {1, 2};
+  next(turn) := {1, 2};
+
+  init(p1) := idle;
+  next(p1) := case
+    turn != 1                    : p1;
+    p1 = idle                    : {idle, trying};
+    p1 = trying & p2 != critical : critical;
+    p1 = critical                : idle;
+    TRUE                         : p1;
+  esac;
+
+  init(p2) := idle;
+  next(p2) := case
+    turn != 2                    : p2;
+    p2 = idle                    : {idle, trying};
+    p2 = trying & p1 != critical : critical;
+    p2 = critical                : idle;
+    TRUE                         : p2;
+  esac;
+
+DEFINE
+  mutex := !(p1 = critical & p2 = critical);
+
+-- =====================================================
+-- FAIRNESS CONSTRAINTS
+-- =====================================================
+
+-- Each process must be scheduled infinitely often.
+-- This rules out traces where the scheduler always picks the same process.
+-- (Compare with TLA+'s weak fairness WF_vars(Action).)
+FAIRNESS turn = 1
+FAIRNESS turn = 2
+
+-- =====================================================
+-- LTL SPECIFICATIONS
+-- =====================================================
+
+-- Safety: G is the LTL analog of CTL's AG
+LTLSPEC G mutex
+
+-- Response: if p1 is trying, it eventually enters CS
+-- (LTL's G(p -> F q) corresponds to CTL's AG(p -> AF q))
+LTLSPEC G (p1 = trying -> F (p1 = critical))
+LTLSPEC G (p2 = trying -> F (p2 = critical))
+
+-- Recurrence: someone enters the CS infinitely often
+LTLSPEC G F (p1 = critical | p2 = critical)
+
+-- Until: once trying, p1 STAYS trying until it enters CS
+-- (demonstrates the U operator — note that U requires the right side
+-- to eventually hold, so this implicitly asserts liveness too)
+LTLSPEC G (p1 = trying -> (p1 = trying U p1 = critical))
+
+-- Next: when p1 is critical and gets scheduled, it releases immediately
+-- (demonstrates the X operator — a one-step guarantee)
+LTLSPEC G ((p1 = critical & turn = 1) -> X (p1 = idle))
+
+-- =====================================================
+-- CTL SPECIFICATIONS (now checked on FAIR paths only)
+-- =====================================================
+
+-- SAFETY: mutual exclusion holds in every reachable state.
+SPEC AG mutex
+
+-- REACHABILITY: each process CAN reach its critical section.
+-- (CTL only — existential quantifier EF has no LTL equivalent)
+SPEC EF (p1 = critical)
+SPEC EF (p2 = critical)
+
+-- NO DEADLOCK: from any state, it's still possible to enter a CS.
+-- (CTL only — nested path quantifiers have no LTL equivalent)
+SPEC AG EF (p1 = critical | p2 = critical)
+
+-- LIVENESS: with fairness, this NOW PASSES — the scheduler cannot starve p1.
+SPEC AG (p1 = trying -> AF (p1 = critical))
+
+-- Run:  nuXmv mutex_v3_ctl.smv
+-- Expected: ALL properties pass with fairness.
+-- Try removing the two FAIRNESS lines and re-running — which ones break?

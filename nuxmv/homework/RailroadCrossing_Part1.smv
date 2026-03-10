@@ -1,0 +1,78 @@
+-- Railroad Crossing Controller — Part 1: Modeling
+--
+-- HOMEWORK: Complete the gate controller for a railroad crossing.
+--
+-- The system has two components:
+--   - Train (environment): moves through a fixed lifecycle.
+--     The nondeterminism is in whether/when a train appears.
+--   - Gate (controller): must react to the train by lowering and raising.
+--
+-- Train lifecycle:   absent -> approaching -> near -> crossing -> leaving -> absent
+-- Gate lifecycle:    up -> lowering -> down -> raising -> up
+--
+-- The "near" state gives the gate one extra step to finish lowering
+-- before the train reaches the crossing. Without it, the gate would
+-- always be one step too late (try removing it and see what happens!).
+--
+-- YOUR TASK:
+-- 1. Complete next(gate) with the correct transition guards:
+--    - Begin lowering when the train is approaching
+--    - Finish lowering (become down) when currently lowering
+--    - Begin raising when the train is leaving
+--    - Finish raising (become up) when currently raising
+--    - Otherwise, stay in the current state
+--
+-- 2. Complete the DEFINE section:
+--    - safe: the train is NOT crossing while the gate is anything other than down
+--      (Hint: "train = crossing implies gate = down")
+--    - train_present: the train is not absent
+--
+-- 3. Uncomment the SPEC at the bottom to verify your model.
+--
+-- HINTS:
+-- - The case statement picks the FIRST matching guard, so order matters
+-- - Look at the train's ASSIGN for the pattern of case/esac
+-- - Use the implication operator -> for the safety definition
+-- - After completing, run: nuXmv RailroadCrossing_Part1.smv
+
+MODULE main
+
+VAR
+  train : {absent, approaching, near, crossing, leaving};
+  gate  : {up, lowering, down, raising};
+
+ASSIGN
+  -- Train transitions (given — do not modify)
+  init(train) := absent;
+  next(train) := case
+    train = absent      : {absent, approaching};
+    train = approaching : near;
+    train = near        : crossing;
+    train = crossing    : leaving;
+    train = leaving     : absent;
+  esac;
+
+  -- Gate: starts in the up position (given)
+  init(gate) := up;
+
+  -- TODO: Complete the gate transitions.
+  -- Replace the FALSEs with the correct guards.
+  next(gate) := case
+    FALSE : lowering;   -- When should the gate start lowering?
+    FALSE : down;       -- When is lowering complete?
+    FALSE : raising;    -- When should the gate start raising?
+    FALSE : up;         -- When is raising complete?
+    TRUE  : gate;       -- Default: stay in current position
+  esac;
+
+DEFINE
+  -- TODO: Replace TRUE with the correct definitions.
+
+  -- safe: if the train is crossing, the gate must be down
+  safe := TRUE;
+
+  -- train_present: the train is somewhere other than absent
+  train_present := TRUE;
+
+-- Uncomment after completing the model:
+-- SPEC AG safe
