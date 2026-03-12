@@ -95,14 +95,14 @@ The model from Parts 1–2 is included (with the same TODOs — complete Part 1 
 
 **CTL quick reference:**
 
-| Formula | Meaning |
-|---------|---------|
-| `AG p` | On all paths, p holds globally |
-| `AF p` | On all paths, p holds eventually |
-| `EF p` | On some path, p holds eventually |
-| `EG p` | On some path, p holds globally |
-| `AX p` | In all next states, p holds |
-| `A[p U q]` | On all paths, p holds until q |
+| Operator (nuXmv notation) | Operator (LTL notation) | Meaning |
+|---------|---------|---------|
+| `AG p` | $\forall \square p$ | On all paths, p holds globally |
+| `AF p` | $\forall \lozenge p$ |On all paths, p holds eventually |
+| `EF p` | $\exists \lozenge p$ |On some path, p holds eventually |
+| `EG p` | $\exists \square p$ | On some path, p holds globally |
+| `AX p` | $\forall \bigcirc p$ | In all next states, p holds |
+| `A[p U q]` | $\forall (p \mathbf{U} q)$ |On all paths, p holds until q |
 
 **What to observe:** Which CTL properties fail without fairness? What counterexample does nuXmv produce? How does `FAIRNESS` fix this? Compare with your LTL specs from Part 2 — which CTL formulas correspond to which LTL formulas?
 
