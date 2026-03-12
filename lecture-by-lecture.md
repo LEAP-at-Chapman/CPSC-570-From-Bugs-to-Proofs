@@ -18,4 +18,6 @@
   * [nuXmv](https://nuxmv.fbk.eu/)
   * Demo: mutex ([model](nuxmv/mutex_v1_model.smv), [LTL](nuxmv/mutex_v2_ltl.smv))
   * HW 3: railroad crossing ([readme](nuxmv/homework/README.md))
+* L6.2: Model Checking III
+  * [CTL](https://hackmd.io/vaBO9pmiThSi89fTy3_4rw?view)
 
