@@ -3,7 +3,7 @@
 ([on github](https://github.com/LEAP-at-Chapman/CPSC-570-From-Bugs-to-Proofs))
 
 ## General Information
-- Class: CPSC 406 Algorithm Analysis 
+- Class: CPSC 570 From Bugs to Proofs
 - Instructor: [Jonathan Weinberger](https://sites.google.com/view/jonathanweinberger), [jweinberger@chapman.edu](mailto:jweinberger@chapman.edu)
 - Lectures: MW 5:30 PM -- 6:45 PM  KC 156
 - Office Hours: Tu 2:20 PM -- 3:50 Swenson N305, Th 2:20 PM -- 3:50 Swenson N205
