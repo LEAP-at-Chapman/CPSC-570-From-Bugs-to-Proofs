@@ -21,6 +21,6 @@
 * L6.2: Model Checking III
   * [CTL](https://hackmd.io/vaBO9pmiThSi89fTy3_4rw?view)
 * L7.1: Model Checking IV
-  * Semantics of [CTL](https://hackmd.io/vaBO9pmiThSi89fTy3_4rw?view)
+  * Semantics of [CTL](https://hackmd.io/vaBO9pmiThSi89fTy3_4rw?view#Semantics-of-CTL)
   * Part 3 from railroad crossing ([readme](nuxmv/homework/README.md))
 
