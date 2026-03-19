@@ -23,4 +23,7 @@
 * L7.1: Model Checking IV
   * Semantics of [CTL](https://hackmd.io/vaBO9pmiThSi89fTy3_4rw?view#Semantics-of-CTL)
   * Part 3 from railroad crossing ([readme](nuxmv/homework/README.md))
+* L7.2: Model Checking V
+  * [CTL vs. LTL](https://hackmd.io/ut28s3cAQiiq3IYFqTjuXw?both)
+  * Preview of timed model checking and [UPAAL](https://uppaal.org/) (see [Timed Automata](https://uppaal.org/texts/by-lncs04.pdf) and [UPAAL Tutorial](https://uppaal.org/texts/new-tutorial.pdf)) 
 
