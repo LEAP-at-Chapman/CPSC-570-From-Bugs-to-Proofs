@@ -1,4 +1,4 @@
-# UPPAAL Homework 1: The Train-Gate Model
+# UPPAAL Homework: The Train-Gate Model
 
 ## Overview
 
