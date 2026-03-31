@@ -1,24 +1,20 @@
 # Overview
 
-The (preliminary) course plan:
+The (updated) course plan, aligned with weeks completed so far:
 
-Week | Part / Focus | Concepts & Techniques | Tools / Languages | AI Learning / AI Component
------|--------------|---------------------|-----------------|---------------------------
-1 | Introduction / Lecture Only | Formal methods overview, motivation, safety, correctness; specifications, deductive reasoning, invariants; verification techniques overview | Lean, Haskell, TLA+, SMT solvers, Rocq, PRISM | Introduce AI as a future assistant for proof guidance, verification, and analysis
-Part 1 – Specification & Deductive Verification
-2 | Formal Specification | TLA+, Z, Alloy; writing precise system specifications | TLA+, SMT solvers | AI-assisted specification validation; automated consistency checks
-3 | Deductive Verification | Hoare logic, pre/postconditions, weakest preconditions | SMT solvers, Lean | AI-guided automated proof suggestions; invariant hints
-4 | Part 1 Application | E.g. Protocol verification: safety & liveness | TLA+, Lean | AI-generated counterexamples; invariant suggestions for protocols
-Part 2 – Static Analysis & Model Checking
-5 | Static Analysis | Abstract interpretation, termination, dataflow analysis | Lean, SMT solvers | ML-based bug prediction; AI heuristics for prioritizing program paths
-6 | Model Checking | LTL, CTL, safety vs liveness, state-space exploration | TLA+, SPIN, UPPAAL | AI-guided state-space exploration and pruning for efficiency
-7 | Part 2 Application | E.g. Hardware verification: CPU / memory modules | TLA+, SMT solvers | AI-assisted synthesis and verification of hardware constraints
-Part 3 – Proof Assistants
-8 | Interactive Theorem Proving | Lean / Rocq basics, proof strategies, automation | Lean, Rocq | AI proof search assistance; automated hint generation
-9 | Advanced Proof Techniques | Dependent types, monads, category theory | Lean, Haskell | Neural-symbolic reasoning for compositional proofs; AI-guided verification of software
-10 | Part 3 Application | Neural network verification: robustness / bounded outputs | Rocq, Lean | AI-assisted formal safety proofs for neural networks
-Part 4 – Probabilistic Programming & Formal Methods
-11 | Probabilistic Programming | Monads for probability, stochastic systems | Haskell, Lean | AI policy modeling with probabilistic monads; probabilistic program abstraction
-12 | Probabilistic Verification | Probabilistic model checking, expected outcomes, invariants | Haskell, PRISM, Lean | AI safety and reliability guarantees; probabilistic reasoning in RL agents
-13 | Part 4 Application | Integrate probabilistic reasoning | Haskell, Lean, PRISM | Verify randomized distributed algorithms or AI policies; AI-guided counterexamples
-14 | Conclusion & Project Presentations | Synthesis of all parts. Discussion and further work on chapters | All course tools | 
+Week | Concepts & Techniques | Tools / Languages | Book Chapter
+-----|-----------------------|-------------------|-------------
+1 | Course introduction; formal methods motivation; safety vs liveness | Lean, Haskell, TLA+, SMT solvers (survey) | Intro and chapter planning
+2 | TLA+ toolbox, temporal modeling, PlusCal basics | TLA+, PlusCal, TLC | Ch 1: System specification with TLA+/PlusCal
+3 | Concurrency, safety, and liveness; HW1 launch | TLA+, PlusCal, TLC | Ch 1: System specification with TLA+/PlusCal
+4 | Relational modeling and constraint-based design | Alloy | Ch 2: Relational modeling with Alloy
+5 | Model checking foundations and LTL | nuXmv, LTL | Ch 3: Model checking with nuXmv/NuSMV
+6 | Transition systems, symbolic model checking, CTL intro | nuXmv, CTL/LTL | Ch 3: Model checking with nuXmv/NuSMV
+7 | CTL semantics, CTL vs LTL, timed model checking preview | nuXmv, UPPAAL (preview) | Ch 3 + Ch 4: nuXmv/NuSMV and UPPAAL
+8 | Timed automata plus contract-based program verification | UPPAAL, Dafny | Ch 4 + Ch 5: UPPAAL and Dafny
+9 | Program contracts and interactive theorem proving foundations | Dafny, Lean | Ch 5 + Ch 6: Dafny and Lean
+10 | Theorem proving and effectful functional verification | Lean, Haskell | Ch 6 + Ch 7: Lean and Haskell
+11 | Effects, monads, and verification-oriented functional programming | Haskell | Ch 7: Effectful programming in Haskell
+12 | Certified programming and extraction workflows | Rocq | Ch 8: Program extraction with Rocq
+13 | Probabilistic and quantum methods (intro) | PRISM, Qiskit | Ch 9 + Ch 10: PRISM and Qiskit
+14 | Quantum programming and circuit verification wrap-up | Qiskit, PyZX | Ch 10 + Ch 11: Qiskit and PyZX
