@@ -4,12 +4,12 @@
 |---|---|---|
 | Anela | PRISM | Haskell |
 | Ethan | UPAAL | Quiskit |
-| Jack | TLA+ | Alloy |
+| Jack | TLA+ | PyZX |
 | Jake | Alloy | UPAAL |
 | John | PyZX | nuXmv |
 | Kalin | Lean | PRISM |
 | Kaye | Haskell | Dafny |
-| Khoa | Dafny | PyZX |
+| Khoa | Dafny | Rocq |
 | Michael | nuXmv | Alloy |
 | Nataniel | Quiskit | TLA+ |
 | Nayeli | Rocq | Lean |
