@@ -1,10 +1,10 @@
-# UPPAAL Homework 1: The Train-Gate Model
+# UPPAAL Homework: The Train-Gate Model
 
 ## Overview
 
 This assignment uses the **train-gate** model, a classic example of a real-time system modeled in UPPAAL. The system consists of 6 trains sharing a single-track bridge, controlled by a gate with a FIFO queue.
 
-Open `train-gate-hw.xml` in UPPAAL. Familiarize yourself with the two templates:
+Open [`train-gate-hw.xml`](train-gate-hw.xml) in UPPAAL. Familiarize yourself with the two templates:
 
 - **Train**: Each train cycles through locations Safe, Appr (approaching), Cross (crossing the bridge), and potentially Stop and Start (if the gate holds it). Each train has a local clock `x` that is reset at various transitions. Note the invariants and guards on each location and transition.
 
