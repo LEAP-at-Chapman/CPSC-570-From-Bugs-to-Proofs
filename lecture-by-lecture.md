@@ -30,6 +30,6 @@
   * [UPAAL](https://uppaal.org/) (see [Timed Automata](https://uppaal.org/texts/by-lncs04.pdf) and [UPAAL Tutorial](https://uppaal.org/texts/new-tutorial.pdf))
   * [UPAAL: HW](upaal/hw.md)
 * L9.1: [Dafny](https://dafny.org/), for tutorials see: [general](https://dafny.org/), [termination](https://dafny.org/latest/OnlineTutorial/Termination), [lemmas](https://dafny.org/latest/OnlineTutorial/Lemmas)
-  * [Lecture tutorial](dafny/tutorial.dy), [HW: Readme](dafny/homework/transactional-inventory/README.md), [HW: Code](dafny/homework/transactional-inventory/homework-transactions.dfy)
+  * [Lecture tutorial](dafny/tutorial.dfy), [HW: Readme](dafny/homework/transactional-inventory/README.md), [HW: Code](dafny/homework/transactional-inventory/homework-transactions.dfy)
 
 
