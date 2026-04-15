@@ -31,7 +31,6 @@ wheels/
 # Virtual environments
 .env
 .venv
-.venv-jb-test
 env/
 venv/
 ENV/

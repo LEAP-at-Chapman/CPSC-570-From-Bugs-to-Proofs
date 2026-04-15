@@ -1,0 +1,5 @@
+# Jupyter Book 2 (MyST engine; supports Python 3.13+)
+jupyter-book==2.1.4
+
+# Optional: publish static HTML (from _build/html) to GitHub Pages
+ghp-import

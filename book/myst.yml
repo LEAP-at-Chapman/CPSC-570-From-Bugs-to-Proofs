@@ -1,0 +1,22 @@
+# Jupyter Book 2 (MyST) — https://jupyterbook.org and https://mystmd.org/guide
+version: 1
+project:
+  title: From Bugs to Proofs
+  description: CPSC 570 — software tools and formal reasoning
+  authors:
+    - name: CPSC 570 (Chapman University)
+  github: https://github.com/LEAP-at-Chapman/CPSC-570-From-Bugs-to-Proofs
+  bibliography:
+    - bib/references.bib
+  # Table of contents (same format as Jupyter Book v1): _toc.yml
+  exclude:
+    - ../lean/**
+    - ../dafny/**
+    - ../tla/**
+    - ../alloy/**
+    - ../nuxmv/**
+    - ../upaal/**
+    - .venv/**
+    - .venv-jb-test/**
+site:
+  template: book-theme

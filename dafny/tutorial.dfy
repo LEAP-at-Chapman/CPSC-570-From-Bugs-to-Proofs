@@ -75,6 +75,7 @@ function fib(n: nat): nat
   else if n == 1 then 1
   else fib(n - 1) + fib(n - 2)
 }
+
 method ComputeFib(n: nat) returns (b: nat)
   ensures b == fib(n)
 {
@@ -124,8 +125,8 @@ method Find(a: array<int>, key: int) returns (index: int)
 {
   index := 0;
   while index < a.Length
-    // invariant 0 <= index <= a.Length
-    // invariant forall k :: 0 <= k < index ==> a[k] != key
+    invariant 0 <= index <= a.Length
+    invariant forall k :: 0 <= k < index ==> a[k] != key
   {
     if a[index] == key { return; }
     index := index + 1;
@@ -144,7 +145,7 @@ predicate sorted(a: array<int>)
 
 // Lemmas
 
-/*
+
 lemma SkippingLemma(a: array<int>, j: int)
   requires forall i :: 0 <= i < a.Length ==> 0 <= a[i]
   requires forall i :: 0 < i < a.Length ==> a[i-1]-1 <= a[i]
@@ -159,7 +160,7 @@ lemma SkippingLemma(a: array<int>, j: int)
     i := i + 1;
   }
 }
-*/
+
 
 method FindZero(a: array<int>) returns (index: int)
   requires forall i :: 0 <= i < a.Length ==> 0 <= a[i]
@@ -169,11 +170,12 @@ method FindZero(a: array<int>) returns (index: int)
 {
   index := 0;
   while index < a.Length
-  // invariant 0 <= index
-  //  invariant forall k :: 0 <= k < index && k < a.Length ==> a[k] != 0
+    invariant 0 <= index
+    invariant forall k :: 0 <= k < index && k < a.Length ==> a[k] != 0
   {
     if a[index] == 0 { return; }
-    // SkippingLemma(a, index);
+    
+    SkippingLemma(a, index);
     index := index + a[index];
   }
   index := -1;

@@ -22,8 +22,8 @@ Possible languages used in this course are, for example, Python, Haskell, Lean, 
 - [Overview](overview.md)
 - [Lecture by Lecture](lecture-by-lecture.md)
 - [Canvas](https://canvas.chapman.edu/courses/83641)
-- [How to create a jupyter book](docs/jupyter-books/how-to-create-a-jupyter-book.md)
-- [Book chapter list](book-chapters.md)
+- [How to create a Jupyter Book](book/docs/jupyter-books/how-to-create-a-jupyter-book.md)
+- [Book chapter list](book/book-chapters.md)
 
 **Resources on Discrete Mathematics**:
 - Dr Moshier's book (see Canvas)
@@ -80,40 +80,81 @@ I reserve the right to not grade any work that does not follow this policy.
 
 ## Jupyter Book
 
-### Setup, Installation, Etc
+The course book lives in the [`book/`](book/) directory. It uses **Jupyter Book 2** ([MyST](https://mystmd.org/)), which reads [`book/myst.yml`](book/myst.yml) and the legacy v1 table of contents in [`book/_toc.yml`](book/_toc.yml). The chapter tree matches [`book/book-chapters.md`](book/book-chapters.md); contributor roles are in [`book/book-chapter-assignments.md`](book/book-chapter-assignments.md).
 
-**Quick Setup** (recommended):
+### Setup, installation, etc.
+
+**Quick setup** (recommended): creates `book/.venv`, installs the `jupyter-book` CLI (bundles a compatible Node toolchain via `nodeenv`), and builds static HTML to `book/_build/html/`.
+
 ```bash
-./setup.sh
+./setup-book.sh
 ```
 
-**Manual Setup**:
-1. **Install dependencies**:
+This runs [`book/setup.sh`](book/setup.sh) then `jupyter-book build --html` inside `book/`. For **install only**, use `cd book && ./setup.sh` and build later yourself.
+
+**Student workflow** (install, build static HTML, and print Git steps for pushing chapter work):
+
+```bash
+./book/scripts/student-book-setup.sh
+```
+
+The same script is available as [`./scripts/student-book-setup.sh`](scripts/student-book-setup.sh) from the repository root.
+
+**Manual setup**:
+
+1. **Install and build** from the repository root:
+
    ```bash
+   ./setup-book.sh
+   ```
+
+   Or install dependencies only, then build in a second step:
+
+   ```bash
+   cd book
+   python3 -m venv .venv
+   source .venv/bin/activate
    pip install -r requirements.txt
+   jupyter-book build --html
    ```
 
-2. **Build the book**:
+2. **Rebuild** (after editing sources; from `book/` with the venv activated):
+
    ```bash
-   jupyter-book build .
+   cd book
+   source .venv/bin/activate
+   jupyter-book build --html
    ```
 
-3. **View the book locally**:
-   ```
-   open _build/html/content/0-title.html
-   ```
+3. **View the book locally** (from `book/`):
 
-4. **Deploy to GitHub Pages**:
    ```bash
-   ghp-import -n -p -f _build/html
+   cd book
+   open _build/html/index.html
    ```
-   This way of deploying to Github requires the following settings. In Github->Settings->Actions choose "Disable actions". In Github->Settings->Pages choose "Deploy from a branch" and then "gh-pages" as the branch.
-   
-5. **View the book**: TODO
+
+   For a live-reloading dev server (from `book/` with `.venv` active):
+
+   ```bash
+   cd book
+   source .venv/bin/activate
+   jupyter-book start
+   ```
+
+4. **Deploy to GitHub Pages** (after a successful `--html` build):
+
+   ```bash
+   cd book && jupyter-book build --html && cd .. && ghp-import -n -p -f book/_build/html
+   ```
+
+   This workflow typically uses GitHub **Settings → Pages → Deploy from a branch → `gh-pages`**.
+
+5. **View the book**: (set after first deploy) `https://leap-at-chapman.github.io/CPSC-570-From-Bugs-to-Proofs/`
 
 **Development**:
-- For development with Jupyter notebooks: `pip install -e ".[dev]"`
-- Interactive examples: [Z3 Examples](z3/z3-examples.ipynb)
+
+- Chapter sources live under `book/content/` as MyST Markdown (`.md`). You can add `.ipynb` notebooks there as well; see the [MyST notebooks guide](https://mystmd.org/guide/notebooks-with-markdown).
+- Optional interactive examples (if present): [Z3 Examples](z3/z3-examples.ipynb)
 
 ## Resources on Jupyter Books
 - [jupyterbook.org](https://jupyterbook.org/stable/)

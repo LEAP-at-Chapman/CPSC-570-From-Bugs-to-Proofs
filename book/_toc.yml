@@ -1,0 +1,45 @@
+# Table of contents — mirrors book-chapters.md
+# https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: content/0-title
+parts:
+  - caption: "Introduction"
+    numbered: false
+    chapters:
+      - file: content/0-intro-book
+      - file: content/0-chapter-outline
+      - file: content/0-chapter-assignments
+
+  - caption: "Part 1: Formal specification"
+    numbered: true
+    chapters:
+      - file: content/01-tla-plus
+      - file: content/02-alloy
+
+  - caption: "Part 2: Static analysis and model checking"
+    numbered: true
+    chapters:
+      - file: content/03-nuxmv
+      - file: content/04-uppaal
+      - file: content/05-dafny
+
+  - caption: "Part 3: Proof assistants and dependent types"
+    numbered: true
+    chapters:
+      - file: content/06-lean
+      - file: content/07-haskell
+      - file: content/08-rocq
+
+  - caption: "Part 4: Probabilistic and quantum methods"
+    numbered: true
+    chapters:
+      - file: content/09-prism
+      - file: content/10-qiskit
+      - file: content/11-pyzx
+
+  - caption: "For contributors"
+    numbered: false
+    chapters:
+      - file: content/how-to-contribute
+      - file: content/how-to-cite
