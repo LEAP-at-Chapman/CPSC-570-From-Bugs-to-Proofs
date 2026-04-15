@@ -92,6 +92,10 @@ The course book lives in the [`book/`](book/) directory. It uses **Jupyter Book 
 
 This runs [`book/setup.sh`](book/setup.sh) then `jupyter-book build --html` inside `book/`. For **install only**, use `cd book && ./setup.sh` and build later yourself.
 
+**Preview the built site:** After `./setup-book.sh`, run **[`./serve-book.sh`](serve-book.sh)** from the repository root and open **http://localhost:8844/** (leave that terminal open). **`ERR_CONNECTION_REFUSED`** means nothing is listening on that port yet—start `./serve-book.sh` first, or you stopped the server while the tab was still trying to load.
+
+**`BASE_URL` and static files:** MyST emits asset links like `/build/...`. Opening `book/_build/html/index.html` with **`file://`** usually fails (you may see a “BASE_URL” warning). For **GitHub project Pages** at `https://leap-at-chapman.github.io/CPSC-570-From-Bugs-to-Proofs/`, build with the repo path as base URL, for example **`BASE_URL=/CPSC-570-From-Bugs-to-Proofs ./setup-book.sh`** or run [`book/scripts/build-github-pages.sh`](book/scripts/build-github-pages.sh) before uploading HTML.
+
 **Student workflow** (install, build static HTML, and print Git steps for pushing chapter work):
 
 ```bash
@@ -126,14 +130,15 @@ The same script is available as [`./scripts/student-book-setup.sh`](scripts/stud
    jupyter-book build --html
    ```
 
-3. **View the book locally** (from `book/`):
+3. **View the book locally** (do not use `file://` on `index.html`; see note above):
 
    ```bash
-   cd book
-   open _build/html/index.html
+   ./serve-book.sh
    ```
 
-   For a live-reloading dev server (from `book/` with `.venv` active):
+   Then open **http://localhost:8844/** and keep the server running.
+
+   Alternatively, from `book/` with `.venv` active:
 
    ```bash
    cd book
@@ -141,10 +146,13 @@ The same script is available as [`./scripts/student-book-setup.sh`](scripts/stud
    jupyter-book start
    ```
 
-4. **Deploy to GitHub Pages** (after a successful `--html` build):
+   Use the URL printed in the terminal (often a high port, not 8844).
+
+4. **Deploy to GitHub Pages** (rebuild with `BASE_URL` matching the repository name, then publish):
 
    ```bash
-   cd book && jupyter-book build --html && cd .. && ghp-import -n -p -f book/_build/html
+   ./book/scripts/build-github-pages.sh
+   ghp-import -n -p -f book/_build/html
    ```
 
    This workflow typically uses GitHub **Settings → Pages → Deploy from a branch → `gh-pages`**.

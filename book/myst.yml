@@ -1,4 +1,9 @@
 # Jupyter Book 2 (MyST) — https://jupyterbook.org and https://mystmd.org/guide
+#
+# Static HTML uses root-absolute asset paths (/build/...). Preview over http(s),
+# not file://. For GitHub project Pages, set BASE_URL when building, e.g.
+#   BASE_URL=/CPSC-570-From-Bugs-to-Proofs jupyter-book build --html
+# See https://mystmd.org/guide/deployment#deploy-base-url
 version: 1
 project:
   title: From Bugs to Proofs

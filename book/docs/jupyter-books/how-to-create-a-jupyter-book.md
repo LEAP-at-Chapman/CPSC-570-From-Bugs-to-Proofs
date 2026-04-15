@@ -4,38 +4,44 @@ This course uses **Jupyter Book 2** with the **MyST** document engine. All book 
 
 ## Basics
 
-From the **repository root** (install dependencies and build static HTML):
+From the **repository root** (install, build, then serve the static site):
 
 ```bash
 ./setup-book.sh
+./serve-book.sh
 ```
 
-From the **`book/`** directory (install, then build, then open):
+Then open **http://localhost:8844/** and leave `serve-book.sh` running. **`ERR_CONNECTION_REFUSED`** means no server is listening on that port (start `./serve-book.sh` first, or you closed it while the tab was still loading).
+
+From the **`book/`** directory (install, build, live dev server):
 
 ```bash
 cd book
 ./setup.sh
 source .venv/bin/activate
 jupyter-book build --html
-open _build/html/index.html
+jupyter-book start
 ```
 
-On Linux, use `xdg-open` instead of `open`, or paste the file path into a browser.
+Do **not** rely on double-clicking `index.html` or using `file://` URLs: MyST uses root-absolute paths such as `/build/...`, which break under `file://`. See [Custom domains and the base URL](https://mystmd.org/guide/deployment#deploy-base-url).
 
-For a local development server with reload:
+On Linux, use `xdg-open` with a real `http://` URL if you open a browser from the terminal.
+
+## GitHub Pages
+
+For `https://<org>.github.io/<repo>/`, set `BASE_URL=/repo` when building (this repository: `/CPSC-570-From-Bugs-to-Proofs`). From the **repository root**:
 
 ```bash
-cd book
-source .venv/bin/activate
-jupyter-book start
+./book/scripts/build-github-pages.sh
 ```
 
 ## Publish on the web
 
-After `jupyter-book build --html`, publish `book/_build/html` (for example with `ghp-import` from `book/requirements.txt`). From the **repository root**:
+After a `BASE_URL`-aware build, publish `book/_build/html` (for example with `ghp-import` from `book/requirements.txt`). From the **repository root**:
 
 ```bash
-cd book && jupyter-book build --html && cd .. && ghp-import -n -p -f book/_build/html
+./book/scripts/build-github-pages.sh
+ghp-import -n -p -f book/_build/html
 ```
 
 See [Host your MyST Site](https://mystmd.org/guide/deployment) for other hosting options.
@@ -45,5 +51,6 @@ See [Host your MyST Site](https://mystmd.org/guide/deployment) for other hosting
 ```bash
 cd book
 rm -rf _build
+source .venv/bin/activate
 jupyter-book build --html
 ```

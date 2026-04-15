@@ -1,6 +1,6 @@
 # How to contribute
 
-From the **repository root**, run `./setup-book.sh` to install dependencies into `book/.venv` and build HTML to `book/_build/html/`. For the same install and build plus Git workflow hints, run `./book/scripts/student-book-setup.sh` (or `./scripts/student-book-setup.sh`).
+From the **repository root**, run `./setup-book.sh` to install dependencies into `book/.venv` and build HTML to `book/_build/html/`. Preview with **`./serve-book.sh`** (then open http://localhost:8844/) or `jupyter-book start` from `book/`; do not use `file://` on `index.html`. If the browser shows **ERR_CONNECTION_REFUSED**, start `./serve-book.sh` and keep that terminal open. For install, build, and Git workflow hints, run `./book/scripts/student-book-setup.sh` (or `./scripts/student-book-setup.sh`).
 
 ## Writing
 

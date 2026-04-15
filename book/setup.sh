@@ -24,5 +24,5 @@ jupyter-book --version
 
 echo ""
 echo "Build static site:  jupyter-book build --html"
-echo "Live preview:       jupyter-book start"
-echo "Open after build:   open _build/html/index.html"
+echo "Preview site:       from repo root: ../serve-book.sh   (or: jupyter-book start)"
+echo "Do not rely on:     open _build/html/index.html   (file:// breaks MyST asset paths)"

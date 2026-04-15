@@ -23,13 +23,12 @@ echo "Building static HTML (output in book/_build/html) ..."
 jupyter-book build --html
 
 echo ""
-echo "---- Local preview (static files) ----"
-echo "  macOS:  open \"$ROOT/_build/html/index.html\""
-echo "  Linux:  xdg-open \"$ROOT/_build/html/index.html\""
+echo "---- Local preview ----"
+echo "  From repo root:  ./serve-book.sh   then open http://localhost:8844/"
+echo "  (Leave the server running; ERR_CONNECTION_REFUSED means nothing is listening on that port.)"
+echo "  Or: cd \"$ROOT\" && source .venv/bin/activate && jupyter-book start"
 echo ""
-echo "---- Live preview (optional) ----"
-echo "  cd \"$ROOT\" && jupyter-book start"
-echo "  Then open the URL printed in the terminal (often http://localhost:3000)."
+echo "  For GitHub Pages, rebuild with BASE_URL (see README or book/scripts/build-github-pages.sh)."
 echo ""
 
 if ! command -v git >/dev/null 2>&1; then
@@ -61,7 +60,7 @@ if git rev-parse --git-dir >/dev/null 2>&1; then
   echo ""
   echo "4. Commit and push to your fork (or origin if you have write access):"
   echo "     git status"
-  echo "     git add book/content/ book/book-chapters.md book/book-chapter-assignments.md book/myst.yml book/_toc.yml book/bib/"
+  echo "     git add book/ setup-book.sh serve-book.sh README.md"
   echo "     git commit -m \"Book: progress on Haskell chapter\""
   echo "     git push -u origin HEAD"
   echo ""
