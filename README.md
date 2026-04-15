@@ -148,16 +148,19 @@ The same script is available as [`./scripts/student-book-setup.sh`](scripts/stud
 
    Use the URL printed in the terminal (often a high port, not 8844).
 
-4. **Deploy to GitHub Pages** (rebuild with `BASE_URL` matching the repository name, then publish):
+4. **Deploy to GitHub Pages** (pick one approach):
+
+   **A. GitHub Actions (recommended)** — On GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**. Then merge or push to **`main`**; the workflow [`.github/workflows/deploy-book.yml`](.github/workflows/deploy-book.yml) builds with `BASE_URL=/CPSC-570-From-Bugs-to-Proofs` and publishes the site. You can also run it manually under **Actions → Deploy book to GitHub Pages → Run workflow**.
+
+   **B. Manual from your laptop** — With `ghp-import` installed (`pip install ghp-import` or use `book/.venv`):
 
    ```bash
-   ./book/scripts/build-github-pages.sh
-   ghp-import -n -p -f book/_build/html
+   ./deploy-book.sh
    ```
 
-   This workflow typically uses GitHub **Settings → Pages → Deploy from a branch → `gh-pages`**.
+   That rebuilds for Pages and pushes the **`gh-pages`** branch. In GitHub **Settings → Pages**, choose **Deploy from a branch** and set the branch to **`gh-pages`** (not Actions). Do not mix branch-based deploy and the Actions workflow unless you intend to maintain both.
 
-5. **View the book**: (set after first deploy) `https://leap-at-chapman.github.io/CPSC-570-From-Bugs-to-Proofs/`
+5. **View the book** (after the first successful deploy): `https://leap-at-chapman.github.io/CPSC-570-From-Bugs-to-Proofs/`
 
 **Development**:
 

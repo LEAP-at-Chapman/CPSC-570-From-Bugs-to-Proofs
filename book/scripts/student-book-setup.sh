@@ -60,7 +60,7 @@ if git rev-parse --git-dir >/dev/null 2>&1; then
   echo ""
   echo "4. Commit and push to your fork (or origin if you have write access):"
   echo "     git status"
-  echo "     git add book/ setup-book.sh serve-book.sh README.md"
+  echo "     git add book/ setup-book.sh serve-book.sh deploy-book.sh README.md .github/"
   echo "     git commit -m \"Book: progress on Haskell chapter\""
   echo "     git push -u origin HEAD"
   echo ""

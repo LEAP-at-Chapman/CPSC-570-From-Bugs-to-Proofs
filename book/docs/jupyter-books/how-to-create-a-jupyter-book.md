@@ -37,12 +37,15 @@ For `https://<org>.github.io/<repo>/`, set `BASE_URL=/repo` when building (this 
 
 ## Publish on the web
 
-After a `BASE_URL`-aware build, publish `book/_build/html` (for example with `ghp-import` from `book/requirements.txt`). From the **repository root**:
+**GitHub Pages (CI):** In the GitHub repo, set **Settings → Pages → Source: GitHub Actions**, then push to `main` so `.github/workflows/deploy-book.yml` in the repository root runs.
+
+**GitHub Pages (manual):** From the **repository root**:
 
 ```bash
-./book/scripts/build-github-pages.sh
-ghp-import -n -p -f book/_build/html
+./deploy-book.sh
 ```
+
+That runs a `BASE_URL`-aware build and `ghp-import` to the `gh-pages` branch (Pages source must be **Deploy from branch → gh-pages**).
 
 See [Host your MyST Site](https://mystmd.org/guide/deployment) for other hosting options.
 
