@@ -82,6 +82,14 @@ I reserve the right to not grade any work that does not follow this policy.
 
 The course book lives in the [`book/`](book/) directory. It uses **Jupyter Book 2** ([MyST](https://mystmd.org/)), which reads [`book/myst.yml`](book/myst.yml) and the legacy v1 table of contents in [`book/_toc.yml`](book/_toc.yml). The chapter tree matches [`book/book-chapters.md`](book/book-chapters.md); contributor roles are in [`book/book-chapter-assignments.md`](book/book-chapter-assignments.md).
 
+For orientation, cf. the book from [CPSC-510](https://leap-at-chapman.github.io/CPSC-510-Logical-Foundations-of-Computing/content/02-logic-programming-prolog.html). The expected length per chapter is 10-20 pages when printed out.
+
+## Timeline
+
+* First draft due: May 15
+* My feedback to you: May 20
+* Final version due: May 25
+
 ### Setup, installation, etc.
 
 **Quick setup** (recommended): creates `book/.venv`, installs the `jupyter-book` CLI (bundles a compatible Node toolchain via `nodeenv`), and builds static HTML to `book/_build/html/`.
