@@ -33,5 +33,7 @@
 * L9.1: [Dafny](https://dafny.org/), for tutorials see: [general](https://dafny.org/), [termination](https://dafny.org/latest/OnlineTutorial/Termination), [lemmas](https://dafny.org/latest/OnlineTutorial/Lemmas)
   * [Lecture tutorial](dafny/tutorial.dfy), [HW: Readme](dafny/homework/transactional-inventory/README.md), [HW: Code](dafny/homework/transactional-inventory/homework-transactions.dfy)
 * L9.2: Introduction to [Lean](https://lean-lang.org/), [Lean Game Server](https://adam.math.hhu.de/), Hitchhiker's Guide to Logical Verification ([repo](https://github.com/lean-forward/logical_verification_2025), [book](https://github.com/lean-forward/logical_verification_2025/blob/main/hitchhikers_guide_2025_desktop.pdf))
+* L10.1: Backward proofs in Lean, see [Hitchhiker's Guide](https://github.com/lean-forward/logical_verification_2025/blob/main/hitchhikers_guide_2025_desktop.pdf)
+* L10.2: Lab to work on Lean HW and book chapter
 
 
