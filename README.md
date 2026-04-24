@@ -6,7 +6,7 @@
 - Class: CPSC 570 From Bugs to Proofs
 - Instructor: [Jonathan Weinberger](https://sites.google.com/view/jonathanweinberger), [jweinberger@chapman.edu](mailto:jweinberger@chapman.edu)
 - Lectures: MW 5:30 PM -- 6:45 PM  KC 156
-- Office Hours: Tu 2:20 PM -- 3:50 Swenson N305, Th 2:20 PM -- 3:50 Swenson N205
+- Office Hours: Tu 2:20 PM -- 3:50, Th 2:20 PM -- 3:50 Swenson 3rd floor
 
 This is the repository for the course CPSC-570 From Bugs to Proof in Spring 2026.
 
