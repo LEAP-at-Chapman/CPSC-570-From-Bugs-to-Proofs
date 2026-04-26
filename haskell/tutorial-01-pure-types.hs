@@ -267,12 +267,8 @@ factorial n = n * factorial (n - 1)
 -- often returns `Maybe a` instead.
 
 headLYAH :: [a] -> a
-headLYAH []    = error "Whoops! No head for empty lists, silly!"
+headLYAH []    = error "Whoops! No head for empty lists!"
 headLYAH (x:_) = x
-
--- Same guard style as LYAH's `bmiTell`, but with a neutral domain: map a
--- percentage score in [0, 100] to a coarse letter bucket (adjust bands to match
--- your syllabus).
 
 letterGrade :: Double -> String
 letterGrade pct
