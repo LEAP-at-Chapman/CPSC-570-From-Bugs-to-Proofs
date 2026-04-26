@@ -19,6 +19,24 @@ This chapter introduces **Qiskit** for designing and running quantum circuits (s
 
 ### Introduction
 
+Qiskit is a Python library developed by IBM for interacting with quantum computers.
+
+### Background
+
+#### Classical Computing
+
+The fundamental unit of information in classical computing systems is the bit (binary digit), which can represent either 0 or 1. Depending on the underlying physical medium, bits can be represented in a variety of ways: electrical charge, magnetization, light intensity, etc. Bits are used to store data and perform logical operations that modify the state of the system. Logic gates perform operations on one or more binary inputs to produce a single output. Common logic gates include AND, OR, and NOT gates. These operations can be modeled using boolean algebra to design complex logic circuits that perform desired functions.
+
+Gordon Moore, the co-founder and former CEO of Intel, famously predicted that the number of transistors in integrated circuits would double roughly every two years (a prediction that would later be known as Moore's law). This rule of thumb has held for several decades, but we are approaching the physical limits to how small transistors can be. Therefore, a new architectural approach is needed to move beyond Moore’s Law and build upon many-core architectures.
+
+#### Quantum Theory
+
+Our physical world is governed by the fundamental laws of physics. While classical physics can be used to describe pheneomena at macroscopic and microscopic scales, quantum physics models submicroscopic and subatomic properties. A foundational understanding in quantum theory is required to explain electromagnetism, the strong force, the weak force, and gravity.
+
+#### Quantum Computing
+
+The basic unit of information in quantum computing systems is the qubit (quantum bit). Unlike a classical bit, which exists in exactly one of two possible states, a qubit can be in an arbitrary superposition of all computable states simultaneously. Qubits can be represented by a linear combination of two basis vectors: $|0\rangle ={\bigl [}{\begin{smallmatrix}1\\0\end{smallmatrix}}{\bigr ]}$ and $|1\rangle ={\bigl [}{\begin{smallmatrix}0\\1\end{smallmatrix}}{\bigr ]}$.
+
 ### A Simple Quantum Circuit
 
 The following code snippet represents a Bell state (two entangled qubits):
@@ -31,6 +49,24 @@ qc.cx(0, 1)             # Apply a Controlled-X gate
 
 ### References & Resources
 
-- [Qiskit Quickstart](https://quantum.cloud.ibm.com/docs/en/guides/quick-start)
-- [Qiskit Circuit Library](https://quantum.cloud.ibm.com/docs/en/api/qiskit/circuit_library)
-- [Qiskit Code Assistant (VS Code Extension)](https://github.com/Qiskit/qiskit-code-assistant-vscode)
+#### Qiskit
+
+- [Quickstart](https://quantum.cloud.ibm.com/docs/en/guides/quick-start)
+- [Circuit Library](https://quantum.cloud.ibm.com/docs/en/api/qiskit/circuit_library)
+- [GitHub repository](https://github.com/Qiskit/qiskit)
+- [VS Code Extension](https://github.com/Qiskit/qiskit-code-assistant-vscode)
+
+#### Quantum Theory
+
+- [Quantum mechanics](https://en.wikipedia.org/wiki/Quantum_mechanics)
+
+#### Quantum Computing
+
+- [Qubit](https://en.wikipedia.org/wiki/Qubit)
+- [Quantum.country](https://quantum.country/qcvc)
+
+#### Classical Computing
+
+- [Bit](https://en.wikipedia.org/wiki/Bit)
+- [Logic gate](https://en.wikipedia.org/wiki/Logic_gate)
+- [Moore's law](https://en.wikipedia.org/wiki/Moore%27s_law)
