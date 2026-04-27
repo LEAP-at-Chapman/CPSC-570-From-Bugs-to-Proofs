@@ -44,8 +44,55 @@ The following is a short Pluscal program that defines a one bit clock, taken fro
 
 ## Example
 
-The following is a TLA+ specification for a mutex lock.
+The following is a Pluscal specification for a mutex lock. Mutex locks are a common structure in programming that can help prevent concurrency errors.
 
+```pluscal
+------------------------------ MODULE MutexLock ------------------------------
+EXTENDS Naturals, Sequences, TLC
+
+CONSTANT N \* Number of processes
+
+ASSUME N \in Nat /\ N > 0
+
+(*
+--algorithm Mutex
+variables
+    lockOwner = 0,          \* 0 means unlocked, otherwise process id
+    waiting = [i \in 1..N |-> FALSE],
+    inCS = [i \in 1..N |-> FALSE];
+
+process (Proc \in 1..N)
+variables self = Proc;
+begin Loop:
+    while TRUE do
+
+Try:
+        waiting[self] := TRUE;
+
+Acquire:
+        await lockOwner = 0;
+        lockOwner := self;
+        waiting[self] := FALSE;
+
+Critical:
+        inCS[self] := TRUE;
+
+Exit:
+        inCS[self] := FALSE;
+        lockOwner := 0;
+
+Remainder:
+        skip;
+
+    end while;
+end process;
+end algorithm;
+*)
+
+=============================================================================
+```
+
+This code can be copy and pasted into TLC and then converted into TLA+ code. From there, you should be able to run the code and model the mutex lock. You should see that only one process will ever be in the critical zone at a time.
 ## Case Study
 
 ## Further Reasources
