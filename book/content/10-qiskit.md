@@ -35,9 +35,21 @@ Our physical world is governed by the fundamental laws of physics. While classic
 
 #### Quantum Computing
 
-The basic unit of information in quantum computing systems is the qubit (quantum bit). Unlike a classical bit, which exists in exactly one of two possible states, a qubit can be in an arbitrary superposition of all computable states simultaneously. Qubits can be represented by a linear combination of two basis vectors: $|0\rangle ={\bigl [}{\begin{smallmatrix}1\\0\end{smallmatrix}}{\bigr ]}$ and $|1\rangle ={\bigl [}{\begin{smallmatrix}0\\1\end{smallmatrix}}{\bigr ]}$.
+##### Qubits
 
-### A Simple Quantum Circuit
+The basic unit of information in quantum computing systems is the qubit (quantum bit). Unlike a classical bit, which exists in exactly one of two possible states, a qubit can be in an arbitrary superposition of all computable states simultaneously. Quantum computers are fundamentally different from classical computers because they can act on every state in the superposition at once. While it is possible to represent qubits classically, as the size of the system grows, quantum computers become extremely difficult to simulate with a classical computer. Qubits can be represented by a linear combination of two basis vectors: $| 0 \rangle ={\bigl [}{\begin{smallmatrix}1\\0\end{smallmatrix}}{\bigr ]}$ and $| 1 \rangle ={\bigl [}{\begin{smallmatrix}0\\1\end{smallmatrix}}{\bigr ]}$. Therefore, the state of a qubit is a vector in a two-dimensional vector space, which is known as the state space.
+
+> The conventional notation used to represent qubits is known as **bra-ket notation** or **Dirac notation**. A **ket** (column vector) is of the form $| v \rangle$ and represents a quantum states, while a **bra** (row vector) is of the form $\langle f |$ and corresponds to the complex conjugate transpose of a ket. While it is convention to use bra-ket notation to describe quantum states as elements of a complex Hilbert space, the underlying representation is always two-dimensional row and column vectors. $| \psi \rangle$ is often used to denote an arbitrary quantum state.
+
+The two orthonormal basis states, $| 0 \rangle$ and $| 1 \rangle$, form the computation basis that span the two-dimensional linear vector space of the qubit. Therefore, all possible qubit states can be described by a linear combination of these two states: $| \psi \rangle = \alpha | 0 \rangle + \beta | 1 \rangle$.
+
+##### Quantum Gates
+
+Quantum gates perform logical operations on qubits.
+
+### Qiskit
+
+#### A Simple Quantum Circuit
 
 The following code snippet represents a Bell state (two entangled qubits):
 
@@ -64,6 +76,7 @@ qc.cx(0, 1)             # Apply a Controlled-X gate
 
 - [Qubit](https://en.wikipedia.org/wiki/Qubit)
 - [Quantum.country](https://quantum.country/qcvc)
+- [Bra-ket notation](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation)
 
 #### Classical Computing
 
