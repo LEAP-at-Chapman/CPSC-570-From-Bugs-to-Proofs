@@ -45,7 +45,16 @@ The two orthonormal basis states, $| 0 \rangle$ and $| 1 \rangle$, form the comp
 
 ##### Quantum Gates
 
-Quantum gates perform logical operations on qubits.
+Quantum gates perform logical operations on qubits. Common quantum gates are shown in the table below.
+
+| Name           | Symbol | # qubits | Description                                                         |
+| -------------- | ------ | -------- | ------------------------------------------------------------------- |
+| Identity       | $I$    | 1        | Returns the input                                                   |
+| Pauili X / NOT | $X$    | 1        | Inverses the input (equivalent to a classical bit flip)             |
+| Pauli Y        | $Y$    | 1        | Flips the bit and phase of the input                                |
+| Pauli Z        | $Z$    | 1        | Flips the phase of the input                                        |
+| Controlled NOT | $CNOT$ | 2        | Inverses the second qubit when the first qubit is $\vert 1 \rangle$ |
+| Hadamard       | $H$    | 1        | Transforms the input into a superposition of states                 |
 
 ### Qiskit
 
@@ -77,6 +86,7 @@ qc.cx(0, 1)             # Apply a Controlled-X gate
 - [Qubit](https://en.wikipedia.org/wiki/Qubit)
 - [Quantum.country](https://quantum.country/qcvc)
 - [Bra-ket notation](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation)
+- [List of quantum logic gates](https://en.wikipedia.org/wiki/List_of_quantum_logic_gates)
 
 #### Classical Computing
 
