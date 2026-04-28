@@ -37,5 +37,8 @@
 * L10.2: Lab to work on Lean HW and book chapter
 * L11.1: Forward proofs in Lean (see [Hitchhiker's Guide](https://github.com/lean-forward/logical_verification_2025/blob/main/hitchhikers_guide_2025_desktop.pdf)) and lab
 * L11.2 [Haskell](https://www.haskell.org/): [Learn You a Haskell for Great Good](https://learnyouahaskell.github.io/), [Wiki](https://wiki.haskell.org/index.php?title=Haskell), [Comparison with Lean LoVe](haskell/tutorial-love-demos-01-04.hs), [Tutorial #1](haskell/tutorial-01-pure-types.hs), [Exercises](haskell/hw-fp-basics.hs)
+* L12.1 [Haskell](https://www.haskell.org/): [Learn You a Haskell for Great Good](https://learnyouahaskell.github.io/), [Wiki](https://wiki.haskell.org/index.php?title=Haskell), [Tutorial #1: Pure types](haskell/tutorial-01-pure-types.hs), 
+[Tutorial #2: I/O and effects](haskell/tutorial-02-io-effects.hs) [Exercises #1](haskell/hw-fp-basics.hs) and [Exercises #2](haskell/hw-effects.hs)
+
 
 

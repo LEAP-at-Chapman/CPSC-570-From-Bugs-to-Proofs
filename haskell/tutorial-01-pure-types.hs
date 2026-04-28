@@ -284,6 +284,8 @@ cylinder r h =
   let sideArea = 2 * pi * r * h
       topArea  = pi * r ^ 2
   in sideArea + 2 * topArea
+-- >>> cylinder 1 2
+-- 18.84955592153876
 
 initials :: String -> String -> String
 initials firstname lastname = [f] ++ ". " ++ [l] ++ "."
@@ -315,6 +317,21 @@ quicksort (x:xs) =
   let smaller = quicksort [a | a <- xs, a <= x]
       bigger  = quicksort [a | a <- xs, a > x]
   in smaller ++ [x] ++ bigger
+
+-- Because both functions only need `Ord`, the same code works for any ordered
+-- type. `Char` ordering follows Unicode/ASCII order, so 'z' is greater than 'a'.
+
+maxIntExample :: Int
+maxIntExample = max 7 42
+
+maxCharExample :: Char
+maxCharExample = max 'a' 'z'
+
+quicksortIntExample :: [Int]
+quicksortIntExample = quicksort [3, 1, 4, 1, 5, 9]
+
+quicksortCharExample :: [Char]
+quicksortCharExample = quicksort ['h', 'a', 's', 'k', 'e', 'l', 'l']
 
 -- ----------------------------------------------------------------------------
 -- LYAH — "Higher order functions" (chapter 6)

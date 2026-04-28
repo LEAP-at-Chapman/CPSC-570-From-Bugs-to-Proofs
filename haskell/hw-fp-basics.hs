@@ -4,8 +4,7 @@
 -- ============================================================================
 --
 -- Submit this file with your definitions filled in (replace every `error "TODO"`).
--- You may add imports at the top. Do not change type signatures unless the
--- instructor says otherwise.
+-- You may add imports at the top. Do not change type signatures.
 --
 -- Constraints (honor the spirit of each problem):
 --   Problem 1 — use pattern matching and recursion only (no `filter`, `map`,
