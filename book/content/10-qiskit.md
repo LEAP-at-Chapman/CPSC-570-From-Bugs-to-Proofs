@@ -80,7 +80,7 @@ The expected output is a near-even split between '00' and '11'. The correspondin
 
 ![Bell state](./10-qiskit/Bell_state.png)
 
-#### Quantum Hardware Execution
+#### Running Circuits on Quantum Hardware
 
 While small quantum circuits can be simulated on classical hardware, scaling up to larger circuits requires quantum computing hardware. The [IBM Quantum Platform](https://quantum.cloud.ibm.com) allows you to execute circuits defined with Qiskit on their quantum processing units (QPUs).
 
@@ -109,9 +109,55 @@ operator_strings = [
 operators = [SparsePauliOp(operator) for operator in operator_strings]
 ```
 
-Then, the circuit must be prepared to run on quantum hardware and the output must be post-processed (these steps excluded here for brevity, see the [documentation](https://quantum.cloud.ibm.com/docs/en/guides/hello-world) for more details). The following plot shows that as the distance between qubits increases, the signal decays because of the presence of noise.
+Then, the circuit must be prepared to run on quantum hardware and the output must be post-processed (these steps excluded here for brevity, see the [documentation](https://quantum.cloud.ibm.com/docs/en/guides/hello-world) for more details). The following plot shows that as the distance between qubits increases, the signal quickly decays because of the presence of noise.
 
 ![100 qubit GHZ state](./10-qiskit/100_qubit_GHZ_state.png)
+
+#### Grover's Algorithm
+
+Created by Lov Grover at Bell Labs in 1996, Grover's algorithm is one of the most fundamental algorithms in the field of quantum computing. The algorithm is designed for [unstructured search](https://quantum.cloud.ibm.com/learning/en/courses/fundamentals-of-quantum-algorithms/grover-algorithm/unstructured-search) problems, where it can be used to determine whether an input that satisfies a black box function (also known as an oracle function), $f$ exists in $O(\sqrt{N})$ time complexity (where $N$ is the size of the function's domain). By contrast, classical computing approaches would require searching the entire input space for a solution, resulting in a worst-case time complexity of $O(N)$, with an average of $N / 2$ steps. A more formal statement of this problem, which can be described as searching for string $x$ that causes $f$ to evaluate to $1$, is shown below.
+
+$$
+\text{Input: a function} \ f:\Sigma^n\rightarrow\Sigma \\
+\text{Output: a string} \ x\in\Sigma^n \ \text{satisfying} \ f(x) = 1\text{, or ``no solution'' if no such string}\ x \ \text{exists}
+$$
+
+The following code snippet creates a quantum circuit with 3 qubits and marks two target states (`011` and `100`) that Grover's algorithm will search for. This circuit serves as the input oracle function.
+
+```python
+marked_states = ["011", "100"]
+qc = QuantumCircuit(3)
+for target in marked_states:
+    # Flip target bit-string to match Qiskit bit-ordering
+    rev_target = target[::-1]
+    # Find the indices of all the '0' elements in bit-string
+    zero_inds = [
+        ind
+        for ind in range(num_qubits)
+        if rev_target.startswith("0", ind)
+    ]
+    # Add a multi-controlled Z-gate with pre- and post-applied X-gates (open-controls)
+    # where the target bit-string has a '0' entry
+    if zero_inds:
+        qc.x(zero_inds)
+    qc.compose(MCMTGate(ZGate(), num_qubits - 1, 1), inplace=True)
+    if zero_inds:
+        qc.x(zero_inds)
+```
+
+This results in the circuit shown below.
+
+![Oracle circuit](./10-qiskit/oracle.png)
+
+Applying Qiskit's built-in `grover_operator()` function to the circuit results in a new circuit that amplifies the states marked by the oracle function.
+
+![Grover circuit](./10-qiskit/grover_operator.png)
+
+Repeated execution of the Grover operator amplify the marked states, increasing their probability in the circuit's output distribution. The optimal number of applications is determined by the ratio of the number of marked states (which is 2 in this case) to the total number of possible computational states (3 qubits results in 8 possible states).
+
+After optimizing the circuit for execution on quantum hardware and sampling the output, a probability distribution similar to the following plot will be returned. The algorithm dramatically amplified the amplitudes of the two marked states (`011` and `100`), which shows a successful application of Grover's algorithm on quantum hardware.
+
+![Result of the Grover circuit](./10-qiskit/grover_result.png)
 
 ### References & Resources
 
@@ -123,6 +169,7 @@ Then, the circuit must be prepared to run on quantum hardware and the output mus
 - [VS Code Extension](https://github.com/Qiskit/qiskit-code-assistant-vscode)
 - [Running circuits on quantum hardware](https://quantum.cloud.ibm.com/docs/en/guides/hello-world)
 - [IBM Quantum Platform](https://quantum.cloud.ibm.com)
+- [Grover's algorithm tutorial](https://quantum.cloud.ibm.com/docs/en/tutorials/grovers-algorithm)
 
 #### Quantum Theory
 
@@ -134,6 +181,7 @@ Then, the circuit must be prepared to run on quantum hardware and the output mus
 - [Quantum.country](https://quantum.country/qcvc)
 - [Bra-ket notation](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation)
 - [List of quantum logic gates](https://en.wikipedia.org/wiki/List_of_quantum_logic_gates)
+- [Grover's algorithm](https://en.wikipedia.org/wiki/Grover%27s_algorithm)
 
 #### Classical Computing
 
