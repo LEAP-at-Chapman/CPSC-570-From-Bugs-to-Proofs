@@ -15,8 +15,6 @@ This chapter introduces **PRISM** for modeling and analyzing systems with probab
 - Explore a further aspect depending on your interest.
 - Link to the PRISM manual, case studies, and benchmark suites.
 
-## Draft
-
 ## 1. Idea
 
 Probabilistic model checking is a formal verification technique for establishing the correctness, performance, and reliablility of systems that exhibit stochastic behavior. A precise mathematical model of a real-life system is constructed first, then formal specifications of properties are automatically analyzed against it. The exploration is exhaustive and combines graph-theoretic algorithms with numerical methods. 
@@ -235,8 +233,29 @@ PIN Block = B1 XOR B2
 The leading `0` in `B1` marks the format; `4` indicated PIN length. `A1`-`A12` are the 12 digits of the customers Personal Account Number (PAN). Two customers with the same PIN now produce different encrypted blcoked, since their PANs are different.
 
 ### 4.3 The Reformatting Attack
+
+THe HSM API typically includes a **translate** command that reformats a PIN block from one format to another. This is necessary when the block passes between nodes expecting different formats. To translate from ISO-0 to VISA-3, the user must re-supply the PAN so the HSM can XOR it away and recover `B1`. Before doing so, the HSM performs an error check: it verifies that all recovered PIN digits are decimal (0–9) rather than hexadecimal (A–F).
+
+This check is the vulnerability. Suppose an attacker supplies a *modified* PAN, specifically with the first account digit XORed against 8: $A_1' = A_1 \oplus 8$. When the HSM XORs this against the encrypted block to recover digit `P3`:
+ 
+- If `P3` is 0, 1, 8, or 9, then `P3 XOR 8` remains decimal — the check **passes**, silently.\
+- If `P3` is in the range 2–7, then `P3 XOR 8` falls in the hexadecimal range A–F — the HSM **signals an error**.
+
+The error signal reveals a constraint on the unknown PIN digit: a pass tells the attacker that `P3 ∈ {0, 1, 8, 9}`, and an error tells them `P3 ∈ {2, 3, 4, 5, 6, 7}`. By repeating this process with different XOR values, the attacker progressively narrows the candidate set. Each pair of digits (0 and 1, 2 and 3, etc.) yields identical error patterns, so the attacker can narrow each digit down to a pair but not yet to a unique value. By then masquerading the ISO block as a VISA-3 block to shift the PIN digits' positions, the attack can be extended to determine each digit uniquely.
+
 ### 4.4 AnaBlock and the MDP Model
+
+There are several known families of PIN recovery attacks, and each HSM customer configures their device differently — enabling different PIN block formats and different API commands. The tool **AnaBlock**, built using constraint logic programming in SICStus Prolog, takes an HSM configuration and automatically determines the most effective available attack. It does this by building a large tree of all possible attacker moves:
+ 
+- For a **single attack**, the tree's edges represent only probabilistic outcomes (the HSM's error-or-pass response). The resulting model is a Markov chain (MC).
+- For a **family of attacks**, the tree contains both probabilistic outcomes *and* nondeterministic choices (which command the attacker issues next). The resulting model is a **Markov Decision Process (MDP)**.
+PRISM then analyzes the MDP to identify the Markov chain within it that represents the most effective attack — either the one that determines the PIN in the fewest expected steps, or, when no complete recovery is possible, the one that reduces the PIN to the fewest remaining candidates.
+ 
+Each **state** in the model encodes the attacker's current knowledge: a set of Boolean flags recording which digit values are still possible. The initial state has all ten digits possible for each position; a final state has each digit uniquely determined.
+
 ### 4.5 The PRISM Model
+
+Below is the auto-generated PRISM fragment for digit 3, corresponding to the tree fragment in the AnaBlock paper. The module tracks which of the ten possible values (0-9) for PIN digit 3 remain consistent with the HSM's responses so far.
 
 ```prism
 // Model for PIN Block attack analysis
@@ -317,16 +336,92 @@ rewards
 endrewards
 ```
 
+There are a few features of this model that are worth noting:
+
+**State encoding.** Rather than enumerating an explicit state for each possible PIN value, the mdoel uses a set of Boolean flags - one per candidate digit. The current knowledge state is fully captured by which flags remain `true`. This keeps the state space manageable while allowing the guard on each command to test the full set of remaining candidates. 
+
+**Nondeterminism.** The three commands (`xor_in(2)`, `xor_in(8)`, `xor_in(10`) all have the same guard (all digits still possible, digit not yet guessed). PRISM treats these as nondeterministic choices. the MDP engine will determine which is optimal.
+
+**Probabilistic outcomes.** Each command transitions to one of two successor states: an "error" branch (some candidates ruled out) and a "pass" branch (different candidates ruled out). The exact probabilities - 2/10, 8/10, 6/10, 4/10 - are dericed from how many of the ten equiprobable PIN digits would cause the HSM to report an arror for that particular XOR value.
+
+**Rewards.** The `rewards` block charges 1 for every transition, so the expected reqard accumulated before reaching a goal state equals the expected number of HSM queries.
+
 ### 4.6 Properties and Analysis
 
-## 5. History
+The key quantitative property asked of this model is:
+ 
+```
+// Minimum expected number of queries to identify the PIN digit
+Rmin=? [ F P3_guessed ]
+```
+ 
+PRISM minimizes over all nondeterministic choices (i.e., over all attacker strategies for sequencing the `xor_in` commands) and returns the expected number of steps under the optimal strategy. For a full model covering all four PIN digits, PRISM computes the complete optimal attack policy — not just the expected cost, but the exact sequence of commands to issue at each knowledge state.
+ 
+The analysis confirmed that the reformatting attack can recover a 4-digit PIN in an expected number of queries far smaller than the 10,000 required by brute force. This illustrates the core value of the approach: PRISM does not merely confirm that an attack *exists*, but finds and quantifies the *best possible* attack automatically.
+ 
+---
 
-## 6. PRISM Resources
+## 5. Further Topics
+ 
+### 5.1 Rewards and Expected Costs
+ 
+PRISM's reward framework lets modelers attach numerical values to states or transitions. Typical uses include:
+ 
+- **Step counts**: reward 1 on each transition to compute expected time to reach a goal
+- **Energy consumption**: reward the power consumed in each state to find minimum-energy strategies
+- **Message overhead**: reward each transmitted message to minimize communication cost
+Reward structures are declared separately from the model and can be stacked — a single model can carry multiple named reward structures analyzed independently.
+ 
+```prism
+rewards "energy"
+  s=active : 2;   // 2 units per step while active
+  s=idle   : 0.1; // 0.1 units per step while idle
+endrewards
+ 
+rewards "messages"
+  [send] true : 1; // 1 message per send action
+endrewards
+```
+ 
+### 5.2 Parametric Model Checking
+ 
+PRISM supports **parametric** analysis, where transition probabilities are left as symbolic variables. Instead of a single numerical answer, PRISM computes a rational function expressing the result in terms of the parameters. This is useful when exact probability values are unknown or when the designer wants to find parameter ranges that guarantee a property.
+ 
+### 5.3 PRISM-games
+ 
+The companion tool **PRISM-games** extends PRISM to handle **stochastic multi-player games**, where two or more agents make nondeterministic choices adversarially or cooperatively. This enables analysis of multi-party security protocols, competitive systems, and scenarios with both an attacker and a defender whose strategies interact.
+ 
+### 5.4 Limitations and Scalability
+ 
+Like all exhaustive verification methods, PRISM faces the **state space explosion problem**: the number of states grows exponentially with the number of concurrent components. PRISM mitigates this with symbolic (BDD/MTBDD) and hybrid engine implementations, but practical models are typically bounded to tens of millions of states. For larger systems, statistical model checking tools (which sample execution paths rather than exploring the full state space) trade soundness for scalability.
+ 
+---
+ 
+## 6. History
+ 
+Probabilistic model checking emerged in the early 1990s with the development of logics like PCTL (Hansson & Jonsson, 1994) and algorithms for verifying them against Markov chains. The PRISM tool began development around 1999 at the University of Birmingham under Marta Kwiatkowska and moved to Oxford, where it remains under active development as of 2024. PRISM is open-source software released under the GNU General Public License and runs on Linux, macOS, and Windows.
+ 
+Key milestones include:
+ 
+- **1999–2002**: Initial development; support for DTMCs and CTMCs with PCTL/CSL
+- **~2004**: MDP support and reward-based properties added
+- **~2007**: Symbolic and hybrid engines matured; tool gains widespread academic adoption
+- **~2011**: PRISM-games fork begins, adding stochastic game support
+- **2015–present**: Extensions to POMDPs, interval MDPs, and parametric model checking; continued maintenance
+PRISM has been used in hundreds of published case studies spanning communication protocols (Bluetooth, Firewire), randomized distributed algorithms, biological systems (circadian clocks, gene regulatory networks), and security protocols (Crowds anonymity network, onion routing, PIN cracking).
+ 
+---
+
+## 7. PRISM Resources
 - [PRISM Manual] (https://www.prismmodelchecker.org/manual/)
 - [PRISM Case Studies] (https://www.prismmodelchecker.org/casestudies/index.php)
 - [PRISM Benchmark Suites] (https://www.prismmodelchecker.org/benchmarks/)
 
-## 6. References 
+## 8. References 
 
-
-*(Replace this section with your exposition, examples, and references.)*
+- Hansson, H., & Jonsson, B. (1994). A logic for reasoning about time and reliability. *Formal Aspects of Computing*, 6(5), 512–535. DOI: [10.1007/BF01211866](https://doi.org/10.1007/BF01211866). [PDF](https://web.stanford.edu/class/cs259/WWW08/papers/hansson94logic.pdf)
+- Steel, G. (2006). Formal analysis of PIN block attacks. *Theoretical Computer Science*, 367(1–2), 257–270. DOI: [10.1016/j.tcs.2006.08.042](https://doi.org/10.1016/j.tcs.2006.08.042). [PDF](https://lsv.ens-paris-saclay.fr/Publis/PAPERS/PDF/Steel-tcs06.pdf)
+- Kwiatkowska, M., Norman, G., & Parker, D. (2007). Stochastic model checking. In M. Bernardo & J. Hillston (Eds.), *Formal Methods for Performance Evaluation* (SFM 2007), LNCS 4486, pp. 220–270. Springer. DOI: [10.1007/978-3-540-72522-0_6](https://doi.org/10.1007/978-3-540-72522-0_6). [PDF](https://www.researchgate.net/publication/221224404_Stochastic_Model_Checking) *(Recommended survey.)*
+- Kwiatkowska, M., Norman, G., & Parker, D. (2011). PRISM 4.0: Verification of probabilistic real-time systems. In G. Gopalakrishnan & S. Qadeer (Eds.), *Computer Aided Verification* (CAV 2011), LNCS 6806, pp. 585–591. Springer. DOI: [10.1007/978-3-642-22110-1_47](https://doi.org/10.1007/978-3-642-22110-1_47)
+- Kwiatkowska, M., Norman, G., Parker, D., & Santos, G. (2020). PRISM-games 3.0: Stochastic game verification with concurrency, equilibria and time. In S. Lahiri & C. Wang (Eds.), *Computer Aided Verification* (CAV 2020), LNCS 12225, pp. 475–487. Springer. DOI: [10.1007/978-3-030-53291-8_25](https://doi.org/10.1007/978-3-030-53291-8_25). [Tool page](https://www.prismmodelchecker.org/games/)
+- Steel, G. (n.d.). PIN cracking schemes [PRISM case study]. University of Oxford. Retrieved from https://www.prismmodelchecker.org/casestudies/pincracking.php
