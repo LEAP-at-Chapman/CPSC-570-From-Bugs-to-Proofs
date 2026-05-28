@@ -15,8 +15,6 @@ This chapter introduces **PyZX** for reasoning about quantum circuits using the 
 - Explore a further aspect depending on your interest.
 - Link to PyZX documentation and papers on completeness and rewrite strategies.
 
-# 3rd Draft: To Be submitted upon final review...
-
 # PyZX: Reasoning About Quantum Circuits with Python and the ZX-Calculus
 
 ## General Idea
