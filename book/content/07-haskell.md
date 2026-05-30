@@ -12,6 +12,35 @@ Haskell's strict separation between pure and effectful code is not merely a
 stylistic choice — it is what makes large-scale equational reasoning and
 machine-assisted verification practical.
 
+## A Brief History of Haskell
+
+Haskell was born out of a recognition in the late 1980s that the functional
+programming research community had fragmented across a dozen incompatible lazy
+languages. In 1987, at the Conference on Functional Programming Languages and
+Computer Architecture (FPCA), a committee was formed to design a single,
+open standard for a lazy, purely functional language. The first version of the
+language, **Haskell 1.0**, was published in 1990, named after the logician
+Haskell Curry, whose work on combinatory logic underlies much of functional
+programming theory.
+
+The language evolved through several revisions over the following decade.
+**Haskell 98** became the first stable, widely-adopted standard and is still
+the baseline that many textbooks target. **Haskell 2010** followed, cleaning
+up a handful of inconsistencies and adding several widely-used extensions to
+the standard.
+
+The **Glasgow Haskell Compiler (GHC)**, developed at the University of Glasgow
+and now maintained by the open-source community, has been the dominant
+implementation since the early 1990s and is the vehicle through which most
+language innovation happens. GHC extensions — opt-in language features enabled
+with a pragma — have driven research in type-level programming, generic
+programming, and verified software that would have been impossible within the
+original standard.
+
+Today Haskell continues to evolve. The GHC release cadence is roughly twice a
+year, and the [GHC Proposals](https://github.com/ghc-proposals/ghc-proposals)
+process provides a transparent, community-driven path for new language features.
+
 ## Goals
 
 - Relate pure functional programming to verification.
@@ -184,6 +213,19 @@ functions. With `IO` values you need a way to *sequence* them —
 
 This sequencing pattern is captured by the `Monad` type class. The two
 essential operations are:
+
+```{note}
+**Monads and category theory.** The word *monad* comes from category theory,
+where a monad is a particular kind of endofunctor equipped with two natural
+transformations satisfying coherence laws. The connection between this abstract
+structure and *notions of computation* — partiality, state, exceptions, I/O —
+was made precise by Eugenio Moggi in a landmark 1991 paper, *Notions of
+Computation and Monads* {cite}`moggi1991`. Philip Wadler subsequently showed
+how Moggi's categorical monads could be used directly as a programming
+pattern in Haskell. You do not need to know category theory to use monads
+effectively, but the categorical origin explains why the three monad laws
+(Section 4.3) feel like abstract algebra — they are.
+```
 
 | Operation | Type | Meaning |
 |---|---|---|
@@ -419,7 +461,47 @@ an `IO` context without an explicit `return`.
 
 ---
 
-## 8  Modern Haskell Tooling
+## 8  Haskell in Industry
+
+Haskell's reputation as an "academic" language understates its real-world
+footprint. A wide range of industries have deployed Haskell in production,
+often precisely because its type system and purity guarantees reduce the cost
+of correctness in high-stakes domains. A few representative examples:
+
+**Finance and trading.** Standard Chartered has a large group using Haskell
+across its wholesale banking business. Barclays Capital's quantitative
+analytics team embedded a functional DSL in Haskell to specify exotic equity
+derivatives. Credit Suisse, Deutsche Bank, and several algorithmic trading
+firms including Tsuru Capital and Starling Software have used Haskell for
+pricing, risk modelling, and automated trading systems.
+
+**Defence and security.** Galois, Inc. has used Haskell for over a decade to
+build high-assurance software for US government clients in cryptography and
+information assurance. BAE Systems used Haskell extensively in their SAFE
+project to build compilers, simulators, and EDSLs. MITRE has applied it to
+cryptographic protocol analysis.
+
+**Hardware design.** Bluespec used Haskell as the implementation language for
+chip design tooling that borrowed ideas from term-rewriting systems. Intel
+Research built a Haskell compiler as part of research on multicore parallelism.
+
+**Infrastructure and tooling.** Microsoft's production serialisation system,
+Bond, is implemented in Haskell and is used broadly in high-scale internal
+services. Facebook built lex-pass, a tool for programmatically manipulating
+PHP codebases, in Haskell. NVIDIA uses Haskell for in-house tooling.
+
+**Startups and web.** Hasura's BaaS platform, Betterteam's recruitment
+backend, and several RSS readers and e-commerce platforms are built entirely or
+substantially in Haskell. Serokell is a software company that specialises in
+Haskell for blockchain platforms, DSLs, and high-volume APIs.
+
+A continuously maintained list of companies using Haskell commercially is
+available at the [Haskell in Industry](https://wiki.haskell.org/Haskell_in_industry)
+wiki page.
+
+---
+
+## 9  Modern Haskell Tooling
 
 | Tool | Purpose | Install |
 |---|---|---|
@@ -441,7 +523,31 @@ navigate the ecosystem.
 
 ---
 
-## 9  Summary
+## 10  Beyond `mtl`: Extensible Effects
+
+Monad transformer stacks (`transformers` / `mtl`) are the traditional solution
+for combining effects, but they come with known drawbacks: the order of
+transformers in a stack matters, and adding a new effect type requires touching
+every layer. A newer family of libraries addresses this with **extensible
+effect** systems, where effects are described as an open, row-polymorphic set
+that can be extended without rebuilding the stack:
+
+| Library | Key idea | Hackage |
+|---|---|---|
+| [`effectful`](https://hackage.haskell.org/package/effectful) | Fast, ST-based carrier; designed for drop-in `mtl` migration | `effectful` |
+| [`cleff`](https://hackage.haskell.org/package/cleff) | Lightweight, polysemy-inspired; good for learning | `cleff` |
+| [`fused-effects`](https://hackage.haskell.org/package/fused-effects) | Algebraic effects via type-class fusion; zero-cost abstraction goal | `fused-effects` |
+
+All three allow you to write code that is polymorphic over the effect set —
+a function that only needs logging and state does not need to mention I/O in
+its type — and each provides a way to interpret effects at the call site rather
+than fixing the interpreter globally. The design space is active and evolving;
+`effectful` is currently the most widely recommended starting point for new
+production code.
+
+---
+
+## 11  Summary
 
 | Concept | Key Idea |
 |---|---|
@@ -467,5 +573,7 @@ and auditable.
 - GHC Team. *[GHC User's Guide](https://downloads.haskell.org/ghc/latest/docs/users_guide/)* — authoritative reference for the compiler and language extensions.
 - GHC Team. *[GHCi Reference](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html)* — interactive environment documentation.
 - Marlow, S. *[Parallel and Concurrent Programming in Haskell](https://simonmar.github.io/pages/pcph.html)* — extends the monad story to concurrency.
+- Moggi, E. (1991). *[Notions of Computation and Monads](https://www.cs.cmu.edu/~crary/819-f09/Moggi91.pdf)*. Information and Computation, 93(1), 55–92. — the categorical paper that established monads as a model for computational effects.
 - Vazou, N. et al. *[Refinement Types for Haskell (Liquid Haskell)](https://ucsd-progsys.github.io/liquidhaskell/)* — connects the purity of Haskell to machine-checked proofs.
-- Hackage. *[`transformers` package](https://hackage.haskell.org/package/transformers)* and *[`mtl` package](https://hackage.haskell.org/package/mtl)* — standard libraries for monad transformer stacks.
+- Hackage. *[`transformers` package](https://hackage.haskell.org/package/transformers)*, *[`mtl` package](https://hackage.haskell.org/package/mtl)*, *[`effectful` package](https://hackage.haskell.org/package/effectful)*, *[`cleff` package](https://hackage.haskell.org/package/cleff)*, *[`fused-effects` package](https://hackage.haskell.org/package/fused-effects)* — effect libraries ranging from classic transformer stacks to modern extensible effect systems.
+- HaskellWiki. *[Haskell in Industry](https://wiki.haskell.org/Haskell_in_industry)* — a community-maintained list of companies using Haskell commercially.
