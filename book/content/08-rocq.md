@@ -15,8 +15,6 @@ This chapter introduces **Rocq** (formerly known as Coq) with emphasis on constr
 - Explore a further aspect depending on your interest.
 - Link to Rocq / Coq documentation and community-maintained learning paths.
 
-## Draft
-
 ## Background
 
 **Rocq** (formerly known as Coq) is a program developed to provide interactive and computational proof assistance to users developing their own theorems. Rocq works as an interactive theorem prover through machine-assisted and machine-augmented proof checking, and it is often used by developers to find formal proofs through proof automation, express and check mathematical insertions, and perform program extraction through proving the existence of a mathematical object in its formal specification. As a program that has existed and been used since 1989, Rocq has established itself as an important computational tool available to developers and mathematicians that are in need of proving complex theorems or extracting code that may be difficult or impossible through human-performed techniques.[^1]
@@ -114,15 +112,42 @@ The relationship between terms and types are one of the fundamental aspects of R
 
 Although Rocq is mainly seen as an interactive proof asistant program, it also functions as a programming language. Due to this dual role, Rocq is able to convert its theorems into executable programs. The theory behind turning theorems into programs assumes that proofs contain computational content and that building blocks from both proofs and programs correspond to each other, such as propositions corresponding to types, proof simplification corresponding to program evaluation, and proofs states corresponding to functions within a program. This theory is referred to as the *Curry-Howard correspondence*.[^6]
 
-The ability to perform program extraction is one of the most important and unique 
+The ability to perform program extraction is one of the most important and unique traits of Rocq, and also the reason many choose Rocq as their program of choice for representing proposed designs in code. Extraction matters due to the methodology of *Correct by Construction (CbC)*, in which mathematical models are built before design coding.[^7] The aim of the methodology of CbC is to catch any possible defects in the design of a proposed model before the time and effort is put on building the final component that the model will be presented in. For example, one typically writes pseudo code to lay out the foundation of a proposed solution to a problem or within smaller blocks like functions that have yet to be written as a way to have a "template" of what the function is supposed to do. Using the CbC methodology with Rocq goes into even lower levels of code, down to the fundamentals of a proposed mathematical or algorithmic design. The combination of CoC and CbC, as well as Rocq being built to support both methodologies, makes proving correctness of a design quicker and more organized than a human doing it by hand at a higher level. 
+
+The extraction targets of Rocq are *OCaml* and *Haskell* due to their compatibility of all being functional languages. Rocq being a functional language is important to its usage as it makes functions more mathematical and immutable, makes computation be expression-based, and makes use of heavy recursion; all which are sought after when proving complicated theorems and verifying lower-level design proposals. Haskell and OCaml in particular match Rocq's internal presentations of containing expressive type systems and pattern matching. 
+
+While Rocq is mainly designed to prove theorems at its most basic level, extraction to Ocaml or Haskell makes it possible to transfer lower-leveled designs written in Rocq into higher-level programs that can compile, run as applications, and most importantly, be able to be integrated into larger or different systems of code. The main idea of extraction is to start from the basics of a design with Rocq, make sure its components are able to be proven, and then extract that design to Ocaml or Haskell, where the design is able to evolve into being part of a bigger and more complete program.
 
 ## How to Perform Program Extraction
 
-TBA
+The basic workflow for program extraction in Rocq is simple. All that is needed is to load Rocq's extraction framework onto any kind of definition or proposition written within the Rocq kernel, with either Ocaml or Haskell chosen as the output language.
 
-## Case Study
+```rocq
+Definition add_one (n : nat) : nat :=
+  n + 1.
+```
 
-TBA
+This is a simple definition written in *Gallina*, Rocq's functional programming language framework. **add_one** takes a natural number and adds **1** to it. Gallina specifically enforces the rule that all programs must terminate, which ensures that all programs that are written are *well-typed* and free from errors and contradictions.[^2] This is valuable to the process of extracting content from Rocq to executable source code, as it makes it necessary for the lower-level *logic* to make sense and be functional.
+
+```rocq
+Require Extraction.
+Extraction Language Haskell.
+Extraction "add_one.hs" add_one.
+```
+**Require Extraction** is what loads Rocq's extraction system. **Extraction Language** defines the language (in this example, it would be Haskell) that will used to represent the translation of Rocq's logic into usable executable code. **"add_one.hs"** is the name of the output file for the extraction. The **add_one** after the output file is telling the extraction system that we will want to extract the contents of **add_one** onto the Haskell output file named **add_one.hs**.[^8]
+
+Once the extraction is ran, the definition written inside Rocq will be automatically translated into the selected extraction language.
+
+```haskell
+add_one :: Nat -> Nat
+add_one n =
+  add n (S O)
+```
+The original definition in Rocq has been extracted into executable Haskell code.
+
+## Real World Usage of Rocq Extraction
+
+The **Compcert C Compiler** is a compiler for the C programming language, a fundamental programming language used in many computational components. The Compcert C Compiler was designed to be intended to be used for life-critical and mission-critical software for systems that need precision, such as systems for rockets and medical equipment. The compiler is trusted by many developers due to being formally verified through it's lowest level of mathematical proofs, making it completely excempt from miscompilation issues that are common in other C compilers. The developers of the Compcert C compiler verified the compiler's core logic through Rocq and extracted the Rocq definitions into OCaml code, which was later increased in size and complexity through C code.[^9] In the end, Rocq is a very valuable program that made itself crucial to the machine-assisted development of several kinds of theorems and systems by being both accurate and malleable enough to "grow" into larger and more complex executable instructions.
 
 ## References
 
@@ -138,4 +163,8 @@ TBA
 
 [^6]: Curry-Howard Correspondence Wikipedia Page. (Link)[https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence]
 
-[^7]: Program Extraction from The Rocq Prover Reference Manual. (Link)[https://rocq-prover.org/doc/V9.2.0/refman/addendum/extraction.html]
+[^7]: Correct by Construction Wikipedia Page. (Link)[https://en.wikipedia.org/wiki/Correct_by_Construction]
+
+[^8]: Program Extraction from The Rocq Prover Reference Manual. (Link)[https://rocq-prover.org/doc/V9.2.0/refman/addendum/extraction.html]
+
+[^9]: The Compcert C Compiler Official Website. (Link)[https://compcert.org/compcert-C.html]

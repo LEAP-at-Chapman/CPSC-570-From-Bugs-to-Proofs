@@ -1,25 +1,23 @@
 # Timed model checking with UPPAAL
 
-```{note}
-**Chapter roles (Spring 2026)**  
-Author: Ethan Tapia · Reviewer: Jake Triester  
+```
+**Chapter roles (Spring 2026)**
+Author: Ethan Tapia · Reviewer: Jake Triester
 See [Chapter assignments](0-chapter-assignments.md).
 ```
 
-This chapter introduces **UPPAAL** for modeling timed automata and verifying timed temporal properties.
+This chapter introduces UPPAAL for modeling timed automata and verifying timed temporal properties. By the end, you should be able to read a UPPAAL `.xml` model, understand what clocks and guards mean operationally, and write queries that distinguish properties that hold from properties that *almost* hold but break under a specific timing.
 
 ## Goals
 
 - Explain timed automata networks and clock constraints in practical terms.
-- Give a small model with a query (reachability or time-bounded property).
-- Explore a further aspect depending on your interest.
-- Link to the UPPAAL GUI documentation and case-study repositories.
-
-## Draft
+- Walk through a small model (the train-gate from class) and write a reachability and a time-bounded property against it.
+- Show how a property can be repaired by tightening it with a clock constraint.
+- Point to the UPPAAL GUI documentation and case-study repositories.
 
 ## From untimed to timed model checking
 
-Earlier chapters covered tools like nuXmv, where time is *abstract* — transitions happen one after another with no notion of "how long." That's enough to reason about ordering ("eventually `q`," "always `p`," "`p` until `q`"), but not enough to reason about deadlines. If you want to ask "can the gate close within 5 seconds of a train approaching?" you need clocks.
+Earlier chapters covered tools like nuXmv where time is *abstract* — transitions happen one after another with no notion of "how long." That's enough to reason about ordering ("eventually `q`," "always `p`," "`p` until `q`"), but not enough to reason about deadlines. If you want to ask "can the gate close within 5 seconds of a train approaching?" you need clocks.
 
 UPPAAL adds real-valued clocks to finite-state automata, giving you **timed automata**. A clock is a variable that increases continuously at rate 1 while time passes in a location, and can be reset to 0 on a transition. Guards on edges and invariants on locations are constraints over these clocks (`x >= 10`, `x < 20`, etc.). The semantics are simple in spirit:
 
@@ -29,7 +27,9 @@ UPPAAL adds real-valued clocks to finite-state automata, giving you **timed auto
 
 A **network of timed automata** is just several of these running in parallel, synchronizing on channels (think Promela/CSP-style `chan!` / `chan?` handshakes). UPPAAL adds some practical extras on top: integer variables, broadcast channels, urgent and committed locations, and arrays — all of which you'll see in the example below.
 
-The property language is a subset of TCTL written in a compact ASCII syntax:
+The property language is a subset of **Timed Computation Tree Logic (TCTL)**, written in a compact ASCII syntax. TCTL is an extension of CTL — the branching-time logic with path quantifiers `A` and `E` introduced in the [previous chapter on model checking with nuXmv](TODO-link-to-CTL-section) — augmented with the ability to write clock constraints inside formulas. So the path quantifiers and modalities are the ones you've already seen; what's new is that the atomic propositions can now be things like `x >= 10` where `x` is a real-valued clock.
+
+UPPAAL's verifier accepts the following operators:
 
 - `A[] P` — invariantly P on all paths (safety / AG)
 - `E<> P` — P is reachable (EF)
@@ -50,6 +50,8 @@ The skeleton of each train is four locations:
 - `Stop` — has been told to wait (entered if the gate is occupied)
 - `Cross` — crossing (synchronizes `leave[id]!` when done)
 
+![Figure 1: The Train template in the UPPAAL editor, showing the four locations and the guards and synchronizations on each edge.](figures/uppaal-train-template.png)
+
 The interesting timing constraints:
 
 - A train in `Appr` can take the `Appr → Cross` edge only when `x >= 10` (it needs time to actually arrive).
@@ -60,13 +62,13 @@ That last constraint is the load-bearing one, and it makes the model interesting
 
 ### Writing a property that holds
 
-The first property is a queue invariant:
+The first property is a **queue invariant** — by which I mean a safety property that constrains the relationship between the gate's queue state and the locations of the trains. The whole protocol revolves around the queue, so it's a natural place to look for invariants that should hold across every reachable state.
 
 ```
 A[] forall (i : id_t) Train(i).Cross imply Gate.len >= 1
 ```
 
-In plain English: whenever any train is in `Cross`, the gate's queue contains at least one entry. This is satisfied, and the reason traces back to the protocol. A train can only reach `Cross` through one of two paths:
+In English: whenever any train is in `Cross`, the gate's queue contains at least one entry. This is satisfied, and the reason traces back to the protocol. A train can only reach `Cross` through one of two paths:
 
 1. `Appr → Cross` directly — but this requires the gate to have handled the train's `appr[id]?`, which is the same transition that enqueues it (`Free → Occ` with `enqueue(e)`).
 2. `Start → Cross` after being released — which requires the gate to have sent `go[front()]!`, and `front()` only exists if the train was enqueued.
@@ -75,7 +77,7 @@ Either way, *enqueuing happens before crossing.* Dequeuing only happens when the
 
 ### Writing a property that *almost* holds
 
-Now, a property that looks reasonable but isn't:
+Now a property that looks reasonable but isn't:
 
 ```
 A[] Train(0).Appr imply forall (i : id_t) (i == 0 or not Train(i).Cross)
@@ -88,6 +90,8 @@ In English: whenever Train(0) is approaching, no other train is crossing. UPPAAL
 - *Now* Train(0) calls `appr[0]!` and enters `Appr`.
 
 At this moment, Train(1) is in `Cross` while Train(0) is in `Appr`. The property fails.
+
+![Figure 2: The UPPAAL Verifier pane with the failing query selected, showing the red status indicator and the option to open the diagnostic trace in the Simulator.](figures/uppaal-verifier-fail.png)
 
 ### Repairing the property with a clock constraint
 
@@ -104,6 +108,8 @@ The `stop[id]?` transition has the guard `x <= 10`. So once Train(0)'s clock exc
 That's the key fact. If the queue was empty when Train(0) arrived, then no train was currently between "enqueued" and "dequeued," which means **no train was in `Cross` at that moment.** And since the FIFO ordering puts any later approaching train *behind* Train(0) in the queue, no later train can reach `Cross` until Train(0) has been dequeued — which requires Train(0) to have crossed and left, which hasn't happened yet (Train(0) is still in `Appr`).
 
 So Train(0) being in `Appr` with `x > 10` carries a hidden guarantee about the gate's history: it was free when Train(0) arrived, the queue is now headed by Train(0), and no other train has crossed since. The property holds.
+
+![Figure 3: The Verifier pane with the repaired query, showing the green "Property is satisfied" indicator.](figures/uppaal-verifier-pass.png)
 
 ## Further exploration: where this scales
 
